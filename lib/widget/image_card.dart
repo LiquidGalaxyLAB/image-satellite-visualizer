@@ -1,68 +1,75 @@
 import 'package:flutter/material.dart';
+import 'package:image_satellite_visualizer/model/image_data.dart';
 
 class ImageCard extends StatelessWidget {
-  const ImageCard({Key? key}) : super(key: key);
+  const ImageCard({Key? key, required this.image}) : super(key: key);
+  final ImageData image;
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
 
     return Container(
-      width: 300,
-      height: 450,
+      width: screenSize.width * 0.22,
+      height: screenSize.height * 0.5,
       child: Card(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Image.network(
-                'https://www.zerogravity.fi/wp-content/uploads/2019/11/satellite-data-e1572891876593-621x556.jpg'),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: screenSize.height * 0.02,
-                horizontal: screenSize.width * 0.01,
+            Expanded(
+              flex: 7,
+              child: Container(
+                child: Image.network(image.imagePath, fit: BoxFit.cover),
               ),
-              child: Text(
-                'Title',
-                style: TextStyle(
+            ),
+            Expanded(
+              flex: 2,
+              child: Container(
+                padding: EdgeInsets.all(screenSize.width * 0.01),
+                child: Text(
+                  image.title,
+                  style: TextStyle(
                     color: Theme.of(context).accentColor,
                     fontWeight: FontWeight.bold,
-                    fontSize: screenSize.width * 0.015),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+                    fontSize: screenSize.width * 0.015,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: screenSize.width * 0.01,
-              ),
-              child: Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                style: TextStyle(fontWeight: FontWeight.w300),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 3,
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding:
+                    EdgeInsets.symmetric(horizontal: screenSize.width * 0.01),
+                child: Text(
+                  image.description,
+                  style: TextStyle(fontWeight: FontWeight.w300),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: screenSize.height * 0.02,
-                horizontal: screenSize.width * 0.01,
-              ),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () => print('cu'),
-                    icon: Icon(Icons.delete)
-                  ),
-                  IconButton(
-                    onPressed: () => print('cu'),
-                    icon: Icon(Icons.edit),
-                  ),
-                  Spacer(),
-                  IconButton(
-                    onPressed: () => print('cu'),
-                    icon: Icon(Icons.send, color: Theme.of(context).accentColor),
-                  ),
-                ],
+            Expanded(
+              flex: 2,
+              child: Container(
+                child: Row(
+                  children: [
+                    IconButton(
+                        onPressed: () => print('DELETE'), icon: Icon(Icons.delete)),
+                    IconButton(
+                      onPressed: () => print('EDIT'),
+                      icon: Icon(Icons.edit),
+                    ),
+                    Spacer(),
+                    IconButton(
+                      onPressed: () => print('SEND'),
+                      icon: Icon(Icons.send,
+                          color: Theme.of(context).accentColor),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
