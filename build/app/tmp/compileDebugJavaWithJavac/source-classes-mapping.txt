@@ -1,0 +1,4 @@
+io/flutter/plugins/GeneratedPluginRegistrant.java
+ io.flutter.plugins.GeneratedPluginRegistrant
+com/example/image_satellite_visualizer/BuildConfig.java
+ com.example.image_satellite_visualizer.BuildConfig

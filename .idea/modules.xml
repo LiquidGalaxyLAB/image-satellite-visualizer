@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/image_satellite_visualizer.iml" filepath="$PROJECT_DIR$/image_satellite_visualizer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/image_satellite_visualizer_android.iml" filepath="$PROJECT_DIR$/android/image_satellite_visualizer_android.iml" />
+    </modules>
+  </component>
+</project>
