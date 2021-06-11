@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_satellite_visualizer/widget/image_card.dart';
 import 'package:image_satellite_visualizer/model/image_data.dart';
+import 'package:image_satellite_visualizer/widget/image_card_demo.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key, required this.title}) : super(key: key);
@@ -42,13 +43,13 @@ class _DashboardState extends State<Dashboard> {
     ),
   ];
 
-  List<Widget> imageCards() {
+  List<Widget> imageCards(bool demo) {
     List<Widget> list = [];
     for (ImageData image in images) {
       list.add(
         Container(
           padding: const EdgeInsets.all(8.0),
-          child: ImageCard(image: image),
+          child: demo ? ImageCardDemo(image: image) : ImageCard(image: image),
         ),
       );
     }
@@ -59,42 +60,87 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(left: screenSize.width * 0.01),
-            child: TextButton(
-              onPressed: () => print('DEMO'),
-              child: Text(
-                'DEMO',
-                style: TextStyle(
-                  color: Colors.white,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: 'My Images'),
+              Tab(text: 'Demo'),
+            ],
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(left: screenSize.width * 0.01),
+              child: TextButton(
+                onPressed: () => print('DEMO'),
+                child: Text(
+                  'DEMO',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: screenSize.width * 0.01),
-            child: TextButton(
-              onPressed: () => print('LIQUID GALAXY'),
-              child: Icon(Icons.wifi, color: Colors.white),
+            Padding(
+              padding: EdgeInsets.only(right: screenSize.width * 0.01),
+              child: TextButton(
+                onPressed: () => print('LIQUID GALAXY'),
+                child: Icon(Icons.wifi, color: Colors.white),
+              ),
             ),
-          ),
-        ],
-      ),
-      body: GridView.count(
-        children: imageCards(),
-        childAspectRatio: 0.8,
-        crossAxisSpacing: screenSize.width * 0.03,
-        crossAxisCount: 3,
-        padding: EdgeInsetsDirectional.all(screenSize.width * 0.07),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => print('FAB'),
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+          ],
+        ),
+        body: TabBarView(
+          children: [
+            Column(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      screenSize.width * 0.1,
+                      screenSize.height * 0.04,
+                      screenSize.width * 0.1,
+                      screenSize.height * 0.01,
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                        labelText: 'Search',
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 8,
+                  child: GridView.count(
+                    children: imageCards(false),
+                    childAspectRatio: 0.8,
+                    crossAxisSpacing: screenSize.width * 0.03,
+                    crossAxisCount: 3,
+                    // padding: EdgeInsetsDirectional.all(screenSize.width * 0.07),
+                    padding: EdgeInsetsDirectional.fromSTEB(
+                        screenSize.width * 0.07,
+                        screenSize.height * 0.01,
+                        screenSize.width * 0.07,
+                        screenSize.height * 0.01),
+                  ),
+                ),
+              ],
+            ),
+            ListView(
+              children: imageCards(true),
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => print('FAB'),
+          tooltip: 'Increment',
+          child: Icon(Icons.add),
+        ),
       ),
     );
   }

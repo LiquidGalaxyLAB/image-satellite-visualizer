@@ -13,6 +13,7 @@ class ImageCard extends StatelessWidget {
       width: screenSize.width * 0.22,
       height: screenSize.height * 0.5,
       child: Card(
+        elevation: 3,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
