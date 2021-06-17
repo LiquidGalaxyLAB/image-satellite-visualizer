@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:image_satellite_visualizer/screen/dashboard.dart';
+import 'package:image_satellite_visualizer/screens/dashboard.dart';
 
 void main() {
   runApp(MyApp());
