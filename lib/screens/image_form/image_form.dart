@@ -18,7 +18,7 @@ class _ImageFormState extends State<ImageForm> {
   }
 
   continued() {
-    _currentStep < 2 ? setState(() => _currentStep += 1) : null;
+    _currentStep != 2 ? setState(() => _currentStep += 1) : Navigator.pop(context);
   }
 
   cancel() {
