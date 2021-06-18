@@ -36,11 +36,14 @@ class _FilterStepState extends State<FilterStep> {
           body: Column(
             children: List<Widget>.generate(
               item.components.length,
-              (index) => ListTile(
-                title: Text(item.components[index]),
-                trailing: const Icon(Icons.info),
-                onTap: () => print(
-                  item.components[index],
+              (index) => InkWell(
+                onTap: () => print(item.components[index]),
+                child: ListTile(
+                  title: Text(item.components[index]),
+                  trailing: const Icon(Icons.info),
+                  onTap: () => print(
+                    item.components[index],
+                  ),
                 ),
               ),
             ),
