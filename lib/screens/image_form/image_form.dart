@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_satellite_visualizer/screens/image_form/steps/api_step.dart';
 import 'package:image_satellite_visualizer/screens/image_form/steps/data_step.dart';
+import 'package:image_satellite_visualizer/screens/image_form/steps/filter_step.dart';
 
 class ImageForm extends StatefulWidget {
   const ImageForm({Key? key}) : super(key: key);
@@ -53,21 +54,15 @@ class _ImageFormState extends State<ImageForm> {
                   _currentStep >= 0 ? StepState.complete : StepState.disabled,
             ),
             Step(
-              title: new Text('Address'),
+              title: new Text('Location and date'),
               content: DataStep(),
               isActive: _currentStep >= 0,
               state:
                   _currentStep >= 1 ? StepState.complete : StepState.disabled,
             ),
             Step(
-              title: new Text('Mobile Number'),
-              content: Column(
-                children: <Widget>[
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Mobile Number'),
-                  ),
-                ],
-              ),
+              title: new Text('Filters'),
+              content: FilterStep(),
               isActive: _currentStep >= 0,
               state:
                   _currentStep >= 2 ? StepState.complete : StepState.disabled,
