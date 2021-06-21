@@ -51,7 +51,7 @@ class _ApiStepState extends State<ApiStep> {
                     width: 250,
                     height: 400,
                     child: Text(
-                      'Lorem ipsum dolor sdit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+                      'The OData interface is a data access protocol built on core protocols like HTTP and commonly accepted methodologies like REST that can be handled by a large set of client tools as simple as common web browsers, download-managers or computer programs such as cURL or Wget. The Open Data Protocol (OData) enables the creation of REST-based data services, which allow resources, identified using Uniform Resource Identifiers (URIs) and defined in a data model, to be published and consumed by Web clients using simple HTTP messages',
                       overflow: TextOverflow.clip,
                       textAlign: TextAlign.center,
                     ),
@@ -89,7 +89,7 @@ class _ApiStepState extends State<ApiStep> {
                     width: 250,
                     height: 400,
                     child: Text(
-                      'Lorem ipsum dolor sdit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+                      "Visually explore the past and present of our dynamic planet through NASA's Global Imagery Browse Services (GIBS). GIBS provides quick access to over 900 satellite imagery products, covering every part of the world. Most imagery is updated daily - available within a few hours after satellite observation, and some products span almost 30 years. The satellite imagery can be rendered in your own web client or GIS application.",
                       overflow: TextOverflow.clip,
                       textAlign: TextAlign.center,
                     ),
@@ -126,7 +126,7 @@ class _ApiStepState extends State<ApiStep> {
                     width: 250,
                     height: 400,
                     child: Text(
-                      'Lorem ipsum dolor sdit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+                      "Sentinel Hub is an engine for processing of petabytes of satellite data. It is opening the doors for machine learning and helping hundreds of application developers worldwide. It makes Sentinel, Landsat, and other Earth observation imagery easily accessible for browsing, visualization and analysis. Scale your system globally with an intuitive and user-friendly interface, without any hassle",
                       overflow: TextOverflow.clip,
                       textAlign: TextAlign.center,
                     ),
