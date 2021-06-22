@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:image_satellite_visualizer/models/image_data.dart';
 import 'package:image_satellite_visualizer/screens/dashboard.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(ImageDataAdapter());
+  var box = await Hive.openBox<ImageData>('imageBox');
   runApp(MyApp());
 }
 
