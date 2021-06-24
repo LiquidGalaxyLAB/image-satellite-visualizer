@@ -176,6 +176,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flutter_plugin_android_lifecycle",
+      "rootUri": "file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_test",
       "rootUri": "file:///Users/octavio_muller/Developer/flutter/packages/flutter_test",
       "packageUri": "lib/",
@@ -190,6 +196,18 @@
     {
       "name": "glob",
       "rootUri": "file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/glob-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "google_maps_flutter",
+      "rootUri": "file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/google_maps_flutter-2.0.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "google_maps_flutter_platform_interface",
+      "rootUri": "file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/google_maps_flutter_platform_interface-2.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -482,7 +500,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2021-06-22T20:56:55.262524Z",
+  "generated": "2021-06-24T00:43:24.971048Z",
   "generator": "pub",
   "generatorVersion": "2.13.1"
 }

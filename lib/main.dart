@@ -7,7 +7,7 @@ import 'package:image_satellite_visualizer/screens/dashboard.dart';
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(ImageDataAdapter());
-  var box = await Hive.openBox<ImageData>('imageBox');
+  // var box = await Hive.openBox<ImageData>('imageBox');
   runApp(MyApp());
 }
 

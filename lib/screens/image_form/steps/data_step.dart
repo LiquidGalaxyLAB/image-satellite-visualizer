@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_satellite_visualizer/screens/image_form/maps.dart';
 
 class DataStep extends StatefulWidget {
   const DataStep({Key? key}) : super(key: key);
@@ -59,7 +60,10 @@ class _DataStepState extends State<DataStep> {
                 Center(
                   child: OutlinedButton(
                     child: Text('GET LOCATIONS'),
-                    onPressed: () => print('maps'),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Maps()),
+                    ),
                   ),
                 )
               ],
