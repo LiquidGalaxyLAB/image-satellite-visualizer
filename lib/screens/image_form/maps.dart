@@ -18,8 +18,8 @@ class _MapsState extends State<Maps> {
     zoom: 1.0,
   );
 
-  Marker? _origin;
-  Marker? _destination;
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+  int _markerIdCounter = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +34,8 @@ class _MapsState extends State<Maps> {
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
             },
-            onTap: (LatLng latLng) => print('tap: $latLng'),
-            onLongPress: (LatLng latLng) => print('longPress: $latLng'),
+            markers: Set<Marker>.of(markers.values),
+            onLongPress: (LatLng position) => _addMarker(position),
           ),
           SafeArea(
             child: Padding(
@@ -49,8 +49,71 @@ class _MapsState extends State<Maps> {
               ),
             ),
           ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color?>(Theme.of(context).accentColor),
+                      ),
+                      child: Text('CONTINUE'),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color?>(Colors.grey[100]),
+                      ),
+                      child: Text(
+                        'RESET',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      onPressed: _resetMarkers,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  void _addMarker(LatLng position) {
+    final int markerCount = markers.length;
+
+    if (markerCount == 2) {
+      return;
+    }
+
+    final String markerIdVal = 'marker_id_$_markerIdCounter';
+    _markerIdCounter++;
+    final MarkerId markerId = MarkerId(markerIdVal);
+
+    final Marker marker = Marker(
+      markerId: markerId,
+      position: position,
+      rotation: 0,
+    );
+
+    setState(() {
+      markers[markerId] = marker;
+    });
+  }
+
+  void _resetMarkers() {
+    setState(() {
+      markers = <MarkerId, Marker>{};
+    });
   }
 }
