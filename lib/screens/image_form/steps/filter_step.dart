@@ -39,8 +39,8 @@ class _FilterStepState extends State<FilterStep> {
               (index) => InkWell(
                 onTap: () => print(item.components[index]),
                 child: ListTile(
+                  tileColor: Colors.grey[100],
                   title: Text(item.components[index]),
-                  trailing: const Icon(Icons.info),
                   onTap: () => print(
                     item.components[index],
                   ),
