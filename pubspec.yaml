@@ -15,6 +15,7 @@ dependencies:
   hive: ^2.0.4
   hive_flutter: ^1.1.0
   google_maps_flutter: ^2.0.6
+  mask_text_input_formatter: ^2.0.0
 
 dev_dependencies:
   flutter_test:

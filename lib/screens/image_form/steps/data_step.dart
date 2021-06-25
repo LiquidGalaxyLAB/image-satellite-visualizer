@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_satellite_visualizer/screens/image_form/maps.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class DataStep extends StatefulWidget {
   const DataStep({Key? key}) : super(key: key);
@@ -10,6 +11,8 @@ class DataStep extends StatefulWidget {
 }
 
 class _DataStepState extends State<DataStep> {
+  var maskFormatter = new MaskTextInputFormatter(mask: "##° ##' ##''", filter: { "#": RegExp(r'[0-9]') });
+
   TextEditingController _firstLatitude = TextEditingController();
   TextEditingController _firstLongitude = TextEditingController();
   TextEditingController _secondLatitude = TextEditingController();
@@ -54,6 +57,7 @@ class _DataStepState extends State<DataStep> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: TextField(
+                          inputFormatters: [maskFormatter],
                           keyboardType: TextInputType.number,
                           controller: _firstLongitude,
                           decoration: new InputDecoration(
@@ -73,6 +77,7 @@ class _DataStepState extends State<DataStep> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: TextField(
+                          inputFormatters: [maskFormatter],
                           keyboardType: TextInputType.number,
                           controller: _firstLatitude,
                           decoration: new InputDecoration(
@@ -100,6 +105,7 @@ class _DataStepState extends State<DataStep> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: TextField(
+                          inputFormatters: [maskFormatter],
                           keyboardType: TextInputType.number,
                           controller: _secondLongitude,
                           decoration: new InputDecoration(
@@ -119,6 +125,7 @@ class _DataStepState extends State<DataStep> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: TextField(
+                          inputFormatters: [maskFormatter],
                           keyboardType: TextInputType.number,
                           controller: _secondLatitude,
                           decoration: new InputDecoration(
@@ -195,13 +202,13 @@ class _DataStepState extends State<DataStep> {
   void setLocation(Map<MarkerId, Marker> markers) {
     setState(() {
       _firstLatitude.text =
-          markers.values.elementAt(0).position.latitude.toString();
+          maskFormatter.maskText(markers.values.elementAt(0).position.latitude.toString());
       _firstLongitude.text =
-          markers.values.elementAt(0).position.longitude.toString();
+          maskFormatter.maskText(markers.values.elementAt(0).position.longitude.toString());
       _secondLatitude.text =
-          markers.values.elementAt(1).position.latitude.toString();
+          maskFormatter.maskText(markers.values.elementAt(1).position.latitude.toString());
       _secondLongitude.text =
-          markers.values.elementAt(1).position.longitude.toString();
+          maskFormatter.maskText(markers.values.elementAt(1).position.longitude.toString());
     });
   }
 
