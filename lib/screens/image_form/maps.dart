@@ -55,21 +55,25 @@ class _MapsState extends State<Maps> {
               alignment: Alignment.bottomRight,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color?>(
-                            Theme.of(context).accentColor),
-                      ),
-                      child: Text('CONTINUE'),
-                      onPressed: () {
-                        this.widget.callback(markers);
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
+                  markers.entries.length == 2
+                      ? Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all<Color?>(
+                                      Theme.of(context).accentColor),
+                            ),
+                            child: Text('CONTINUE'),
+                            onPressed: () {
+                              this.widget.callback(markers);
+                              Navigator.pop(context);
+                            },
+                          ),
+                        )
+                      : Container(),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton(
