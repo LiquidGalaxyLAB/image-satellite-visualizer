@@ -15,6 +15,8 @@ class _DataStepState extends State<DataStep> {
   TextEditingController _secondLatitude = TextEditingController();
   TextEditingController _secondLongitude = TextEditingController();
 
+  DateTime selectedDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -149,7 +151,7 @@ class _DataStepState extends State<DataStep> {
             ),
           ),
           Container(
-            height: screenSize.height * 0.5,
+            height: screenSize.height * 0.45,
             width: screenSize.width * 0.4,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,42 +168,22 @@ class _DataStepState extends State<DataStep> {
                     fontSize: screenSize.height * 0.025,
                   ),
                 ),
-                TextField(
-                  decoration: new InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(),
-                    ),
-                    hintText: 'Day',
-                    labelText: 'Day',
+                Spacer(),
+                Center(
+                  child: Text(
+                    '${selectedDate.year}/${selectedDate.month}/${selectedDate.day}',
+                    style: TextStyle(
+                    fontSize: screenSize.height * 0.03,
+                  ),
                   ),
                 ),
-                TextField(
-                  decoration: new InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(),
-                    ),
-                    hintText: 'Month',
-                    labelText: 'Month',
+                Spacer(),
+                Center(
+                  child: OutlinedButton(
+                    child: Text('GET DATE'),
+                    onPressed: () async => await _selectDate(context),
                   ),
-                ),
-                TextField(
-                  decoration: new InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(),
-                    ),
-                    hintText: 'Year',
-                    labelText: 'Year',
-                  ),
-                ),
+                )
               ],
             ),
           ),
@@ -221,5 +203,18 @@ class _DataStepState extends State<DataStep> {
       _secondLongitude.text =
           markers.values.elementAt(1).position.longitude.toString();
     });
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
   }
 }
