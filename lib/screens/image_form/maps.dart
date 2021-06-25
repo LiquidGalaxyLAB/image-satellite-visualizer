@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Maps extends StatefulWidget {
-  const Maps({Key? key}) : super(key: key);
+  final callback;
+  const Maps({required this.callback, Key? key}) : super(key: key);
 
   @override
   _MapsState createState() => _MapsState();
@@ -59,11 +60,14 @@ class _MapsState extends State<Maps> {
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color?>(Theme.of(context).accentColor),
+                        backgroundColor: MaterialStateProperty.all<Color?>(
+                            Theme.of(context).accentColor),
                       ),
                       child: Text('CONTINUE'),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        this.widget.callback(markers);
+                        Navigator.pop(context);
+                      },
                     ),
                   ),
                   Padding(
