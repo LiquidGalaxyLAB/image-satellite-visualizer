@@ -146,6 +146,10 @@ hive_generator
 2.12
 file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/hive_generator-1.1.0/
 file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/hive_generator-1.1.0/lib/
+http
+2.12
+file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.13.3/
+file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.13.3/lib/
 http_multi_server
 2.12
 file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/http_multi_server-3.0.1/

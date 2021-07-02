@@ -11,7 +11,7 @@ class DataStep extends StatefulWidget {
 }
 
 class _DataStepState extends State<DataStep> {
-  var maskFormatter = new MaskTextInputFormatter(mask: "##° ##' ##''", filter: { "#": RegExp(r'[0-9]') });
+  var maskFormatter = new MaskTextInputFormatter(mask: "##° ##' ##''", filter: { "#": RegExp(r'[0-9]')});
 
   TextEditingController _firstLatitude = TextEditingController();
   TextEditingController _firstLongitude = TextEditingController();

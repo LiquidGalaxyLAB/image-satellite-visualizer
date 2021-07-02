@@ -13,6 +13,7 @@ class Maps extends StatefulWidget {
 
 class _MapsState extends State<Maps> {
   Completer<GoogleMapController> _controller = Completer();
+  late BitmapDescriptor pinLocationIcon;
 
   static final CameraPosition _initial = CameraPosition(
     target: LatLng(-23.36, -46.84),
@@ -20,7 +21,18 @@ class _MapsState extends State<Maps> {
   );
 
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+  Map<PolygonId, Polygon> polygons = <PolygonId, Polygon>{};
   int _markerIdCounter = 1;
+
+  @override
+  void initState() {
+    BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5),
+            'assets/images/marker.png')
+        .then((onValue) {
+      pinLocationIcon = onValue;
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +48,7 @@ class _MapsState extends State<Maps> {
               _controller.complete(controller);
             },
             markers: Set<Marker>.of(markers.values),
+            polygons: Set<Polygon>.of(polygons.values),
             onLongPress: (LatLng position) => _addMarker(position),
           ),
           SafeArea(
@@ -97,7 +110,28 @@ class _MapsState extends State<Maps> {
     );
   }
 
-  void _addMarker(LatLng position) {
+  void myPolygon(double lat1, double lon1, double lat2, double lon2) {
+    final PolygonId polygonId = PolygonId('polygon');
+
+    final List<LatLng> polygonCoords = [];
+    polygonCoords.add(LatLng(lat1, lon1));
+    polygonCoords.add(LatLng(lat1, lon2));
+    polygonCoords.add(LatLng(lat2, lon2));
+    polygonCoords.add(LatLng(lat2, lon1));
+
+    final Polygon polygon = Polygon(
+      polygonId: polygonId,
+      points: polygonCoords,
+      strokeColor: Color.fromARGB(50, 255, 0, 0),
+      fillColor: Color.fromARGB(50, 255, 0, 0),
+    );
+
+    setState(() {
+      polygons[polygonId] = polygon;
+    });
+  }
+
+  void _addMarker(LatLng position) async {
     final int markerCount = markers.length;
 
     if (markerCount == 2) {
@@ -109,19 +143,27 @@ class _MapsState extends State<Maps> {
     final MarkerId markerId = MarkerId(markerIdVal);
 
     final Marker marker = Marker(
+      icon: pinLocationIcon,
       markerId: markerId,
       position: position,
       rotation: 0,
     );
-
     setState(() {
       markers[markerId] = marker;
+      if (markerCount == 1)
+        myPolygon(
+          markers.values.elementAt(0).position.latitude,
+          markers.values.elementAt(0).position.longitude,
+          markers.values.elementAt(1).position.latitude,
+          markers.values.elementAt(1).position.longitude,
+        );
     });
   }
 
   void _resetMarkers() {
     setState(() {
       markers = <MarkerId, Marker>{};
+      polygons = <PolygonId, Polygon>{};
     });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
+import 'package:image_satellite_visualizer/models/image_request.dart';
 import 'package:image_satellite_visualizer/screens/image_form/image_form.dart';
 import 'package:image_satellite_visualizer/widgets/image_card.dart';
 import 'package:image_satellite_visualizer/models/image_data.dart';
@@ -56,15 +57,26 @@ class _DashboardState extends State<Dashboard> {
               padding: EdgeInsets.only(left: screenSize.width * 0.01),
               child: TextButton(
                 onPressed: () async {
-                  imageBox!.add(
-                    ImageData(
-                      imagePath:
-                          "https://www.zerogravity.fi/wp-content/uploads/2019/11/satellite-data-e1572891876593-621x556.jpg",
-                      title: "Teste",
-                      description:
-                          "Lorem ipsum dolor sdit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                    ),
+                  ImageRequest request = ImageRequest(
+                    layers: [''],
+                    time: 'time',
+                    bbox: {
+                      'lat1': -23.683348,
+                      'long1': -45.264316,
+                      'lat2': -22.290165,
+                      'long2': 43.414857,
+                    },
                   );
+                  print(request.calculateDistance(request.bbox['lat1'], request.bbox['long1'], request.bbox['lat2'], request.bbox['long2']));
+                  // imageBox!.add(
+                  //   ImageData(
+                  //     imagePath:
+                  //         "https://wvs.earthdata.nasa.gov/api/v1/snapshot?REQUEST=GetSnapshot&LAYERS=MODIS_Terra_CorrectedReflectance_Bands721,MODIS_Terra_Thermal_Anomalies_Day&CRS=EPSG:4326&TIME=2015-06-18&WRAP=DAY,DAY&BBOX=-7.912045,-67.937737,-3.294353,-56.612034&FORMAT=image/jpeg&WIDTH=5154&HEIGHT=2102&AUTOSCALE=TRUE&ts=1625108987976",
+                  //     title: "Teste",
+                  //     description:
+                  //         "Lorem ipsum dolor sdit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                  //   ),
+                  // );
                 },
                 child: Text(
                   'DEMO',
