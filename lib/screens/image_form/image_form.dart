@@ -13,12 +13,14 @@ class ImageForm extends StatefulWidget {
 class _ImageFormState extends State<ImageForm> {
   int _currentStep = 0;
 
+  Map<String, double> bbox = {};
+
   tapped(int step) {
     setState(() => _currentStep = step);
   }
 
   continued() {
-    _currentStep != 2 ? setState(() => _currentStep += 1) : Navigator.pop(context);
+    _currentStep != 2 ? setState(() => _currentStep += 1) : print('bbox: $bbox');
   }
 
   cancel() {
@@ -55,7 +57,7 @@ class _ImageFormState extends State<ImageForm> {
             ),
             Step(
               title: new Text('Location and date'),
-              content: DataStep(),
+              content: DataStep(callback: this.setCoordinates),
               isActive: _currentStep >= 0,
               state:
                   _currentStep >= 1 ? StepState.complete : StepState.disabled,
@@ -71,5 +73,14 @@ class _ImageFormState extends State<ImageForm> {
         ),
       ),
     );
+  }
+
+  void setCoordinates(Map<String, dynamic> coordinates) {
+    setState(() {
+      bbox['lat1'] = coordinates['lat1'];
+      bbox['lon1'] = coordinates['lon1'];
+      bbox['lat2'] = coordinates['lat2'];
+      bbox['lon2'] = coordinates['lon2'];
+    });
   }
 }
