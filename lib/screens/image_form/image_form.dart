@@ -14,6 +14,7 @@ class _ImageFormState extends State<ImageForm> {
   int _currentStep = 0;
 
   Map<String, double> bbox = {};
+  late String layer;
 
   tapped(int step) {
     setState(() => _currentStep = step);
@@ -64,7 +65,7 @@ class _ImageFormState extends State<ImageForm> {
             ),
             Step(
               title: new Text('Filters'),
-              content: FilterStep(),
+              content: FilterStep(callback: this.setLayer),
               isActive: _currentStep >= 0,
               state:
                   _currentStep >= 2 ? StepState.complete : StepState.disabled,
@@ -81,6 +82,13 @@ class _ImageFormState extends State<ImageForm> {
       bbox['lon1'] = coordinates['lon1'];
       bbox['lat2'] = coordinates['lat2'];
       bbox['lon2'] = coordinates['lon2'];
+    });
+  }
+
+  void setLayer(String incomingLayer) {
+    print(incomingLayer);
+    setState(() {
+      layer = incomingLayer;
     });
   }
 }
