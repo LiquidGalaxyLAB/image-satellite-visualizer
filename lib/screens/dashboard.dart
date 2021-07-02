@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
+import 'package:geodesy/geodesy.dart';
 import 'package:image_satellite_visualizer/models/image_request.dart';
 import 'package:image_satellite_visualizer/screens/image_form/image_form.dart';
 import 'package:image_satellite_visualizer/widgets/image_card.dart';
@@ -17,6 +18,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   Box? imageBox;
+  Geodesy geodesy = Geodesy();
 
   List<Widget> imageCards(bool demo, List images) {
     List<Widget> list = [];
@@ -57,17 +59,23 @@ class _DashboardState extends State<Dashboard> {
               padding: EdgeInsets.only(left: screenSize.width * 0.01),
               child: TextButton(
                 onPressed: () async {
+                  // https: //wvs.earthdata.nasa.gov/api/v1/snapshot?REQUEST=GetSnapshot&LAYERS=MODIS_Terra_CorrectedReflectance_TrueColor,MODIS_Terra_Thermal_Anomalies_Day,Coastlines_15m,Reference_Features_15m&CRS=EPSG:4326&TIME=2020-03-30&WRAP=DAY,DAY,X,X&BBOX=23.503876,-2.9809,30.699062,9.827785&FORMAT=image/jpeg&WIDTH=1457&HEIGHT=819&AUTOSCALE=FALSE&ts=1625207529053
                   ImageRequest request = ImageRequest(
-                    layers: [''],
-                    time: 'time',
+                    layers: [
+                      "MODIS_Terra_CorrectedReflectance_TrueColor",
+                      "MODIS_Terra_Thermal_Anomalies_Day",
+                      "Coastlines_15m",
+                      "Reference_Features_15m",
+                    ],
+                    time: '2020-03-30',
                     bbox: {
-                      'lat1': -23.683348,
-                      'long1': -45.264316,
-                      'lat2': -22.290165,
-                      'long2': 43.414857,
+                      'lat1': 23.503876,
+                      'lon1': -2.980900,
+                      'lat2': 30.699062,
+                      'lon2': 9.827785,
                     },
                   );
-                  print(request.calculateDistance(request.bbox['lat1'], request.bbox['long1'], request.bbox['lat2'], request.bbox['long2']));
+                  print(request.getRequestUrl());
                   // imageBox!.add(
                   //   ImageData(
                   //     imagePath:

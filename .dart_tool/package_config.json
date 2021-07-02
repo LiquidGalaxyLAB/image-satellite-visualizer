@@ -194,6 +194,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "geodesy",
+      "rootUri": "file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/geodesy-0.4.0-nullsafety.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "glob",
       "rootUri": "file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/glob-2.0.1",
       "packageUri": "lib/",
@@ -254,6 +260,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "intl",
+      "rootUri": "file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "io",
       "rootUri": "file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/io-1.0.0",
       "packageUri": "lib/",
@@ -268,6 +280,12 @@
     {
       "name": "json_annotation",
       "rootUri": "file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "latlong2",
+      "rootUri": "file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/latlong2-0.8.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -512,7 +530,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2021-07-02T02:36:00.926216Z",
+  "generated": "2021-07-02T06:05:41.061743Z",
   "generator": "pub",
   "generatorVersion": "2.13.1"
 }

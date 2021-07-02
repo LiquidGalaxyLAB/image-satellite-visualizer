@@ -1,9 +1,12 @@
 import 'dart:math' show cos, sqrt, asin;
 
+import 'package:geodesy/geodesy.dart';
+
 class ImageRequest {
+  final Geodesy geodesy = Geodesy();
   final List<String> layers;
   final String time;
-  final Map<String, double> bbox;
+  final Map<String, dynamic> bbox;
 
   ImageRequest({
     required this.layers,
@@ -11,24 +14,26 @@ class ImageRequest {
     required this.bbox,
   });
 
-  double calculateDistance(lat1, long1, lat2, long2){
-    var p = 0.017453292519943295;
-    var c = cos;
-    var a = 0.5 - c((lat2 - lat1) * p)/2 + 
-          c(lat1 * p) * c(lat2 * p) * 
-          (1 - c((long2 - long1) * p))/2;
-    return 12742 * asin(sqrt(a));
-  }
-
   Map<String, String> getResolutions() {
-    
+    int height = (geodesy.distanceBetweenTwoGeoPoints(
+                LatLng(this.bbox['lat1'], this.bbox['lon1']),
+                LatLng(this.bbox['lat2'], this.bbox['lon1'])) /
+            1000)
+        .round();
+    int width = (geodesy.distanceBetweenTwoGeoPoints(
+                LatLng(this.bbox['lat1'], this.bbox['lon1']),
+                LatLng(this.bbox['lat1'], this.bbox['lon2'])) /
+            1000)
+        .round();
     return {
-      'height': '',
-      'width': '',
+      'height': height.toString(),
+      'width': width.toString(),
     };
   }
 
+  String getBoundaries() => '${this.bbox['lat1']},${this.bbox['lon1']},${this.bbox['lat2']},${this.bbox['lon2']}';
+
   String getRequestUrl() {
-    return "https://wvs.earthdata.nasa.gov/api/v1/snapshot?REQUEST=GetSnapshot&LAYERS=${this.layers}&CRS=EPSG:4326&TIME=${this.time}&WRAP=DAY,DAY&BBOX=${this.bbox}&FORMAT=image/jpeg&WIDTH=${this.getResolutions()["width"]}&HEIGHT=${this.getResolutions()["height"]}&AUTOSCALE=FALSE";
+    return "https://wvs.earthdata.nasa.gov/api/v1/snapshot?REQUEST=GetSnapshot&LAYERS=${this.layers.join(',')}&CRS=EPSG:4326&TIME=${this.time}&BBOX=${this.getBoundaries()}&FORMAT=image/jpeg&WIDTH=${this.getResolutions()["width"]}&HEIGHT=${this.getResolutions()["height"]}&AUTOSCALE=FALSE";
   }
 }

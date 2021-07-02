@@ -118,6 +118,10 @@ frontend_server_client
 2.12
 file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/frontend_server_client-2.1.0/
 file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/frontend_server_client-2.1.0/lib/
+geodesy
+2.12
+file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/geodesy-0.4.0-nullsafety.0/
+file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/geodesy-0.4.0-nullsafety.0/lib/
 glob
 2.12
 file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/glob-2.0.1/
@@ -158,6 +162,10 @@ http_parser
 2.12
 file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0/
 file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0/lib/
+intl
+2.12
+file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0/
+file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0/lib/
 io
 2.12
 file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/io-1.0.0/
@@ -170,6 +178,10 @@ json_annotation
 2.12
 file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.0.1/
 file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.0.1/lib/
+latlong2
+2.12
+file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/latlong2-0.8.0/
+file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/latlong2-0.8.0/lib/
 logging
 2.12
 file:///Users/octavio_muller/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/logging-1.0.1/
