@@ -22,7 +22,7 @@ class _DataStepState extends State<DataStep> {
 
   DateTime selectedDate = DateTime.now();
 
-  Map<String, dynamic> coordinates = {};
+  Map<String, double> coordinates = {};
 
   @override
   Widget build(BuildContext context) {
@@ -64,30 +64,7 @@ class _DataStepState extends State<DataStep> {
                           onChanged: (value) {
                             this.widget.callback(coordinates);
                           },
-                          inputFormatters: [maskFormatter],
-                          keyboardType: TextInputType.number,
-                          controller: _firstLongitude,
-                          decoration: new InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(),
-                            ),
-                            hintText: 'Longitude',
-                            labelText: 'Longitude',
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: TextField(
-                          onChanged: (value) {
-                            this.widget.callback(coordinates);
-                          },
-                          inputFormatters: [maskFormatter],
+                          // inputFormatters: [maskFormatter],
                           keyboardType: TextInputType.number,
                           controller: _firstLatitude,
                           decoration: new InputDecoration(
@@ -99,6 +76,29 @@ class _DataStepState extends State<DataStep> {
                             ),
                             hintText: 'Latitude',
                             labelText: 'Latitude',
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: TextField(
+                          onChanged: (value) {
+                            this.widget.callback(coordinates);
+                          },
+                          // inputFormatters: [maskFormatter],
+                          keyboardType: TextInputType.number,
+                          controller: _firstLongitude,
+                          decoration: new InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(),
+                            ),
+                            hintText: 'Longitude',
+                            labelText: 'Longitude',
                           ),
                         ),
                       ),
@@ -118,30 +118,7 @@ class _DataStepState extends State<DataStep> {
                           onChanged: (value) {
                             this.widget.callback(coordinates);
                           },
-                          inputFormatters: [maskFormatter],
-                          keyboardType: TextInputType.number,
-                          controller: _secondLongitude,
-                          decoration: new InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(),
-                            ),
-                            hintText: 'Longitude',
-                            labelText: 'Longitude',
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: TextField(
-                          onChanged: (value) {
-                            this.widget.callback(coordinates);
-                          },
-                          inputFormatters: [maskFormatter],
+                          // inputFormatters: [maskFormatter],
                           keyboardType: TextInputType.number,
                           controller: _secondLatitude,
                           decoration: new InputDecoration(
@@ -153,6 +130,29 @@ class _DataStepState extends State<DataStep> {
                             ),
                             hintText: 'Latitude',
                             labelText: 'Latitude',
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: TextField(
+                          onChanged: (value) {
+                            this.widget.callback(coordinates);
+                          },
+                          // inputFormatters: [maskFormatter],
+                          keyboardType: TextInputType.number,
+                          controller: _secondLongitude,
+                          decoration: new InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(),
+                            ),
+                            hintText: 'Longitude',
+                            labelText: 'Longitude',
                           ),
                         ),
                       ),

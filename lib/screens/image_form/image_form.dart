@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:image_satellite_visualizer/models/image_request.dart';
 import 'package:image_satellite_visualizer/screens/image_form/steps/api_step.dart';
 import 'package:image_satellite_visualizer/screens/image_form/steps/data_step.dart';
 import 'package:image_satellite_visualizer/screens/image_form/steps/filter_step.dart';
+
+import 'dart:math';
 
 class ImageForm extends StatefulWidget {
   const ImageForm({Key? key}) : super(key: key);
@@ -21,11 +24,33 @@ class _ImageFormState extends State<ImageForm> {
   }
 
   continued() {
-    _currentStep != 2 ? setState(() => _currentStep += 1) : print('bbox: $bbox');
+    _currentStep != 2
+        ? setState(() => _currentStep += 1)
+        : print(createRequest());
   }
 
   cancel() {
     _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
+  }
+
+  String createRequest() {
+    var minLat = min(bbox['lat1']!, bbox['lat2']!);
+    var maxLat = max(bbox['lat1']!, bbox['lat2']!);
+    var minLon = min(bbox['lon1']!, bbox['lon2']!);
+    var maxLon = max(bbox['lon1']!, bbox['lon2']!);
+
+    bbox['lat1'] = minLat;
+    bbox['lat2'] = maxLat;
+    bbox['lon1'] = minLon;
+    bbox['lon2'] = maxLon;
+
+    ImageRequest request = ImageRequest(
+      layers: [layer],
+      time: '2020-03-30',
+      bbox: bbox,
+    );
+    
+    return request.getRequestUrl();
   }
 
   @override
@@ -76,17 +101,16 @@ class _ImageFormState extends State<ImageForm> {
     );
   }
 
-  void setCoordinates(Map<String, dynamic> coordinates) {
+  void setCoordinates(Map<String, double> coordinates) {
     setState(() {
-      bbox['lat1'] = coordinates['lat1'];
-      bbox['lon1'] = coordinates['lon1'];
-      bbox['lat2'] = coordinates['lat2'];
-      bbox['lon2'] = coordinates['lon2'];
+      bbox['lat1'] = coordinates['lat1']!;
+      bbox['lon1'] = coordinates['lon1']!;
+      bbox['lat2'] = coordinates['lat2']!;
+      bbox['lon2'] = coordinates['lon2']!;
     });
   }
 
   void setLayer(String incomingLayer) {
-    print(incomingLayer);
     setState(() {
       layer = incomingLayer;
     });
