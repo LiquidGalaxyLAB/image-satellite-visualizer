@@ -58,34 +58,7 @@ class _DashboardState extends State<Dashboard> {
             Padding(
               padding: EdgeInsets.only(left: screenSize.width * 0.01),
               child: TextButton(
-                onPressed: () async {
-                  // https: //wvs.earthdata.nasa.gov/api/v1/snapshot?REQUEST=GetSnapshot&LAYERS=MODIS_Terra_CorrectedReflectance_TrueColor,MODIS_Terra_Thermal_Anomalies_Day,Coastlines_15m,Reference_Features_15m&CRS=EPSG:4326&TIME=2020-03-30&WRAP=DAY,DAY,X,X&BBOX=23.503876,-2.9809,30.699062,9.827785&FORMAT=image/jpeg&WIDTH=1457&HEIGHT=819&AUTOSCALE=FALSE&ts=1625207529053
-                  ImageRequest request = ImageRequest(
-                    layers: [
-                      "MODIS_Terra_CorrectedReflectance_TrueColor",
-                      "MODIS_Terra_Thermal_Anomalies_Day",
-                      "Coastlines_15m",
-                      "Reference_Features_15m",
-                    ],
-                    time: '2020-03-30',
-                    bbox: {
-                      'lat1': 23.503876,
-                      'lon1': -2.980900,
-                      'lat2': 30.699062,
-                      'lon2': 9.827785,
-                    },
-                  );
-                  print(request.getRequestUrl());
-                  // imageBox!.add(
-                  //   ImageData(
-                  //     imagePath:
-                  //         "https://wvs.earthdata.nasa.gov/api/v1/snapshot?REQUEST=GetSnapshot&LAYERS=MODIS_Terra_CorrectedReflectance_Bands721,MODIS_Terra_Thermal_Anomalies_Day&CRS=EPSG:4326&TIME=2015-06-18&WRAP=DAY,DAY&BBOX=-7.912045,-67.937737,-3.294353,-56.612034&FORMAT=image/jpeg&WIDTH=5154&HEIGHT=2102&AUTOSCALE=TRUE&ts=1625108987976",
-                  //     title: "Teste",
-                  //     description:
-                  //         "Lorem ipsum dolor sdit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                  //   ),
-                  // );
-                },
+                onPressed: () => print('DEMO'),
                 child: Text(
                   'DEMO',
                   style: TextStyle(

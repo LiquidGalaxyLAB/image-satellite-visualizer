@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_satellite_visualizer/models/image_data.dart';
@@ -30,11 +32,15 @@ class _ImageCardState extends State<ImageCard> {
         elevation: 3,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
               flex: 7,
               child: Container(
-                child: Image.network(widget.image.imagePath, fit: BoxFit.cover),
+                child: Image.file(
+                  File(widget.image.imagePath),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Expanded(
@@ -66,6 +72,7 @@ class _ImageCardState extends State<ImageCard> {
                 ),
               ),
             ),
+            Spacer(),
             Expanded(
               flex: 2,
               child: Container(
