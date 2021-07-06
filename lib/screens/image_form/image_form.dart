@@ -70,7 +70,7 @@ class _ImageFormState extends State<ImageForm> {
 
       var response = await http.get(Uri.parse(request.getRequestUrl()));
       Directory documentDirectory = await getApplicationDocumentsDirectory();
-      File file = new File(path.join(documentDirectory.path, 'imagetest.png'));
+      File file = new File(path.join(documentDirectory.path, '${DateTime.now().millisecondsSinceEpoch}.png'));
       file.writeAsBytesSync(response.bodyBytes);
 
       Navigator.pop(context);
