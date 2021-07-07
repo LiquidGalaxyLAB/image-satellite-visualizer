@@ -1,28 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_satellite_visualizer/screens/image_form/maps.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class DataStep extends StatefulWidget {
-  final callback;
-  const DataStep({required this.callback, Key? key}) : super(key: key);
+class DataStep extends StatelessWidget {
+  final coordinateCallback;
+  final dateCallback;
+  final Map<String, TextEditingController> textControllers;
+  final DateTime date;
 
-  @override
-  _DataStepState createState() => _DataStepState();
-}
-
-class _DataStepState extends State<DataStep> {
-  var maskFormatter = new MaskTextInputFormatter(
-      mask: "##° ##' ##''", filter: {"#": RegExp(r'[0-9]')});
-
-  TextEditingController _firstLatitude = TextEditingController();
-  TextEditingController _firstLongitude = TextEditingController();
-  TextEditingController _secondLatitude = TextEditingController();
-  TextEditingController _secondLongitude = TextEditingController();
-
-  DateTime selectedDate = DateTime.now();
-
-  Map<String, double> coordinates = {};
+  const DataStep({
+    required this.textControllers,
+    required this.date,
+    required this.coordinateCallback,
+    required this.dateCallback,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -61,12 +53,8 @@ class _DataStepState extends State<DataStep> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: TextField(
-                          onChanged: (value) {
-                            this.widget.callback(coordinates);
-                          },
-                          // inputFormatters: [maskFormatter],
                           keyboardType: TextInputType.number,
-                          controller: _firstLatitude,
+                          controller: textControllers['lat1Controller'],
                           decoration: new InputDecoration(
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(),
@@ -84,12 +72,8 @@ class _DataStepState extends State<DataStep> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: TextField(
-                          onChanged: (value) {
-                            this.widget.callback(coordinates);
-                          },
-                          // inputFormatters: [maskFormatter],
                           keyboardType: TextInputType.number,
-                          controller: _firstLongitude,
+                          controller: textControllers['lon1Controller'],
                           decoration: new InputDecoration(
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(),
@@ -115,12 +99,8 @@ class _DataStepState extends State<DataStep> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: TextField(
-                          onChanged: (value) {
-                            this.widget.callback(coordinates);
-                          },
-                          // inputFormatters: [maskFormatter],
                           keyboardType: TextInputType.number,
-                          controller: _secondLatitude,
+                          controller: textControllers['lat2Controller'],
                           decoration: new InputDecoration(
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(),
@@ -138,12 +118,8 @@ class _DataStepState extends State<DataStep> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: TextField(
-                          onChanged: (value) {
-                            this.widget.callback(coordinates);
-                          },
-                          // inputFormatters: [maskFormatter],
                           keyboardType: TextInputType.number,
-                          controller: _secondLongitude,
+                          controller: textControllers['lon2Controller'],
                           decoration: new InputDecoration(
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(),
@@ -194,7 +170,7 @@ class _DataStepState extends State<DataStep> {
                 Spacer(),
                 Center(
                   child: Text(
-                    '${selectedDate.year}/${selectedDate.month}/${selectedDate.day}',
+                    '${date.year}/${date.month}/${date.day}',
                     style: TextStyle(
                       fontSize: screenSize.height * 0.03,
                     ),
@@ -216,45 +192,16 @@ class _DataStepState extends State<DataStep> {
   }
 
   void setLocation(Map<MarkerId, Marker> markers) {
-    // setState(() {
-    //   _firstLatitude.text =
-    //       maskFormatter.maskText(markers.values.elementAt(0).position.latitude.toString());
-    //   _firstLongitude.text =
-    //       maskFormatter.maskText(markers.values.elementAt(0).position.longitude.toString());
-    //   _secondLatitude.text =
-    //       maskFormatter.maskText(markers.values.elementAt(1).position.latitude.toString());
-    //   _secondLongitude.text =
-    //       maskFormatter.maskText(markers.values.elementAt(1).position.longitude.toString());
-    // });
-    setState(() {
-      _firstLatitude.text =
-          markers.values.elementAt(0).position.latitude.toString();
-      _firstLongitude.text =
-          markers.values.elementAt(0).position.longitude.toString();
-      _secondLatitude.text =
-          markers.values.elementAt(1).position.latitude.toString();
-      _secondLongitude.text =
-          markers.values.elementAt(1).position.longitude.toString();
-
-      coordinates['lat1'] = markers.values.elementAt(0).position.latitude;
-      coordinates['lon1'] = markers.values.elementAt(0).position.longitude;
-      coordinates['lat2'] = markers.values.elementAt(1).position.latitude;
-      coordinates['lon2'] = markers.values.elementAt(1).position.longitude;
-    });
-
-    this.widget.callback(coordinates);
+    coordinateCallback(markers);
   }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
+      initialDate: date,
       firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101),
+      lastDate: DateTime.now(),
     );
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
+    if (picked != null && picked != date) dateCallback(picked);
   }
 }

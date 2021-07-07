@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_satellite_visualizer/models/image_data.dart';
 import 'package:image_satellite_visualizer/models/image_request.dart';
 import 'package:image_satellite_visualizer/screens/image_form/steps/api_step.dart';
 import 'package:image_satellite_visualizer/screens/image_form/steps/data_step.dart';
-import 'package:image_satellite_visualizer/screens/image_form/steps/filter_step.dart';
+import 'package:image_satellite_visualizer/screens/image_form/steps/final_step.dart';
+import 'package:image_satellite_visualizer/screens/image_form/steps/layer_step.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
@@ -22,37 +24,38 @@ class ImageForm extends StatefulWidget {
 class _ImageFormState extends State<ImageForm> {
   Box? imageBox;
 
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-
   int _currentStep = 0;
 
-  Map<String, double> bbox = {};
-  late String layer;
-
-  tapped(int step) {
-    setState(() => _currentStep = step);
-  }
-
-  continued() {
-    print('step: $_currentStep');
-    _currentStep != 2 ? setState(() => _currentStep += 1) : createRequest();
-  }
-
-  cancel() {
-    if (_currentStep > 0) setState(() => _currentStep -= 1);
-  }
+  String selectedApi = "Nasa";
+  Map<String, TextEditingController> coordinates = {
+    "lat1Controller": TextEditingController(),
+    "lon1Controller": TextEditingController(),
+    "lat2Controller": TextEditingController(),
+    "lon2Controller": TextEditingController(),
+  };
+  DateTime date = DateTime.now();
+  String layer =
+      "MODIS_Terra_CorrectedReflectance_TrueColor"; //TODO: Add map for base and ovelay layers
+  String? imagePath;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
 
   void createRequest() async {
-    var minLat = min(bbox['lat1']!, bbox['lat2']!);
-    var maxLat = max(bbox['lat1']!, bbox['lat2']!);
-    var minLon = min(bbox['lon1']!, bbox['lon2']!);
-    var maxLon = max(bbox['lon1']!, bbox['lon2']!);
+    var minLat = min(double.parse(coordinates['lat1Controller']!.text),
+        double.parse(coordinates['lat2Controller']!.text));
+    var maxLat = max(double.parse(coordinates['lat1Controller']!.text),
+        double.parse(coordinates['lat2Controller']!.text));
+    var minLon = min(double.parse(coordinates['lon1Controller']!.text),
+        double.parse(coordinates['lon2Controller']!.text));
+    var maxLon = max(double.parse(coordinates['lon1Controller']!.text),
+        double.parse(coordinates['lon2Controller']!.text));
 
-    bbox['lat1'] = minLat;
-    bbox['lat2'] = maxLat;
-    bbox['lon1'] = minLon;
-    bbox['lon2'] = maxLon;
+    Map<String, dynamic> bbox = {
+      'lat1': minLat,
+      'lat2': maxLat,
+      'lon1': minLon,
+      'lon2': maxLon,
+    };
 
     ImageRequest request = new ImageRequest(
       layers: [layer],
@@ -60,118 +63,25 @@ class _ImageFormState extends State<ImageForm> {
       bbox: bbox,
     );
 
-    try {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return Center(child: CircularProgressIndicator());
-        },
-      );
+    var response = await http.get(Uri.parse(request.getRequestUrl()));
+    Directory documentDirectory = await getApplicationDocumentsDirectory();
+    File file = new File(path.join(documentDirectory.path,
+        '${DateTime.now().millisecondsSinceEpoch}.png'));
+    file.writeAsBytesSync(response.bodyBytes);
 
-      var response = await http.get(Uri.parse(request.getRequestUrl()));
-      Directory documentDirectory = await getApplicationDocumentsDirectory();
-      File file = new File(path.join(documentDirectory.path, '${DateTime.now().millisecondsSinceEpoch}.png'));
-      file.writeAsBytesSync(response.bodyBytes);
+    print('imagePath: ${file.path}');
 
-      Navigator.pop(context);
-
-      showDialog(
-        context: context,
-        builder: (context) {
-          Size screenSize = MediaQuery.of(context).size;
-
-          return AlertDialog(
-            content: Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Image.file(file, fit: BoxFit.cover),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: screenSize.width * 0.01,
-                              vertical: screenSize.height * 0.01),
-                          child: TextField(
-                            controller: _nameController,
-                            decoration: new InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(),
-                              ),
-                              hintText: 'Name',
-                              labelText: 'Name',
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: screenSize.width * 0.01,
-                              vertical: screenSize.height * 0.01),
-                          child: TextField(
-                            controller: _descriptionController,
-                            maxLines: 11,
-                            decoration: new InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(),
-                              ),
-                              hintText: 'Description',
-                              labelText: 'Description',
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  createImage(file.path);
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                },
-                child: Text(
-                  'Continue',
-                  style: TextStyle(color: Theme.of(context).accentColor),
-                ),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-      );
-    } catch (e) {
-      print(e);
-    }
+    setState(() {
+      imagePath = file.path;
+    });
   }
 
-  void createImage(String filePath) {
+  void createImage() {
     imageBox?.add(
       ImageData(
-        imagePath: filePath,
-        title: _nameController.text,
-        description: _descriptionController.text,
+        imagePath: imagePath!,
+        title: nameController.text,
+        description: descriptionController.text,
       ),
     );
   }
@@ -205,24 +115,36 @@ class _ImageFormState extends State<ImageForm> {
           steps: <Step>[
             Step(
               title: new Text('API'),
-              content: ApiStep(),
+              content: ApiStep(selectedApi, setApi),
               isActive: _currentStep >= 0,
               state:
                   _currentStep >= 0 ? StepState.complete : StepState.disabled,
             ),
             Step(
               title: new Text('Location and date'),
-              content: DataStep(callback: this.setCoordinates),
+              content: DataStep(
+                  textControllers: coordinates,
+                  date: date,
+                  coordinateCallback: setCoordinates,
+                  dateCallback: setDate),
               isActive: _currentStep >= 0,
               state:
                   _currentStep >= 1 ? StepState.complete : StepState.disabled,
             ),
             Step(
-              title: new Text('Filters'),
-              content: FilterStep(callback: this.setLayer),
+              title: new Text('Layers'),
+              content: FilterStep(layer, setLayer),
               isActive: _currentStep >= 0,
               state:
                   _currentStep >= 2 ? StepState.complete : StepState.disabled,
+            ),
+            Step(
+              title: new Text('Final'),
+              content:
+                  FinalStep(nameController, descriptionController, imagePath),
+              isActive: _currentStep >= 0,
+              state:
+                  _currentStep >= 3 ? StepState.complete : StepState.disabled,
             ),
           ],
         ),
@@ -230,12 +152,48 @@ class _ImageFormState extends State<ImageForm> {
     );
   }
 
-  void setCoordinates(Map<String, double> coordinates) {
+  tapped(int step) {
+    setState(() => _currentStep = step);
+  }
+
+  continued() {
+    if (_currentStep < 3) {
+      setState(() => _currentStep += 1);
+      if (_currentStep == 3) {
+        createRequest();
+      }
+    } else {
+      createImage();
+      Navigator.pop(context);
+    }
+  }
+
+  cancel() {
+    if (_currentStep > 0) setState(() => _currentStep -= 1);
+  }
+
+  void setApi(String api) {
     setState(() {
-      bbox['lat1'] = coordinates['lat1']!;
-      bbox['lon1'] = coordinates['lon1']!;
-      bbox['lat2'] = coordinates['lat2']!;
-      bbox['lon2'] = coordinates['lon2']!;
+      selectedApi = api;
+    });
+  }
+
+  void setCoordinates(Map<MarkerId, Marker> markers) {
+    setState(() {
+      coordinates['lat1Controller']?.text =
+          markers.values.elementAt(0).position.latitude.toString();
+      coordinates['lon1Controller']?.text =
+          markers.values.elementAt(0).position.longitude.toString();
+      coordinates['lat2Controller']?.text =
+          markers.values.elementAt(1).position.latitude.toString();
+      coordinates['lon2Controller']?.text =
+          markers.values.elementAt(1).position.longitude.toString();
+    });
+  }
+
+  void setDate(DateTime newDate) {
+    setState(() {
+      date = newDate;
     });
   }
 

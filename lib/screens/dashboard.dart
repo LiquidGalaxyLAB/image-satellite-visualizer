@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
-import 'package:geodesy/geodesy.dart';
-import 'package:image_satellite_visualizer/models/image_request.dart';
 import 'package:image_satellite_visualizer/screens/image_form/image_form.dart';
 import 'package:image_satellite_visualizer/widgets/image_card.dart';
 import 'package:image_satellite_visualizer/models/image_data.dart';
@@ -18,7 +16,6 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   Box? imageBox;
-  Geodesy geodesy = Geodesy();
 
   List<Widget> imageCards(bool demo, List images) {
     List<Widget> list = [];
@@ -120,6 +117,7 @@ class _DashboardState extends State<Dashboard> {
               ],
             ),
             ValueListenableBuilder(
+              
               valueListenable: Hive.box('imageBox').listenable(),
               builder: (context, box, widget) {
                 return ListView(
