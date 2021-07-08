@@ -34,8 +34,7 @@ class _ImageFormState extends State<ImageForm> {
     "lon2Controller": TextEditingController(),
   };
   DateTime date = DateTime.now();
-  String layer =
-      "MODIS_Terra_CorrectedReflectance_TrueColor"; //TODO: Add map for base and ovelay layers
+  String layer = ""; //TODO: Add map for base and ovelay layers
   String? imagePath;
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -50,7 +49,7 @@ class _ImageFormState extends State<ImageForm> {
     var maxLon = max(double.parse(coordinates['lon1Controller']!.text),
         double.parse(coordinates['lon2Controller']!.text));
 
-    Map<String, dynamic> bbox = {
+    Map<String, double> bbox = {
       'lat1': minLat,
       'lat2': maxLat,
       'lon1': minLon,
@@ -63,11 +62,18 @@ class _ImageFormState extends State<ImageForm> {
       bbox: bbox,
     );
 
-    var response = await http.get(Uri.parse(request.getRequestUrl()));
+    var response;
+    if (selectedApi == "Nasa") {
+      response = await http.get(Uri.parse(request.getNasaRequestUrl()));
+      print(request.getNasaRequestUrl());
+    } else if (selectedApi == "SentinelHub") {
+      response = await http.get(Uri.parse(request.getSentinelHubRequestUrl()));
+      print(request.getSentinelHubRequestUrl());
+    }
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     File file = new File(path.join(documentDirectory.path,
         '${DateTime.now().millisecondsSinceEpoch}.png'));
-    file.writeAsBytesSync(response.bodyBytes);
+    file.writeAsBytesSync(response?.bodyBytes);
 
     print('imagePath: ${file.path}');
 
@@ -133,7 +139,7 @@ class _ImageFormState extends State<ImageForm> {
             ),
             Step(
               title: new Text('Layers'),
-              content: FilterStep(layer, setLayer),
+              content: FilterStep(layer, setLayer, selectedApi),
               isActive: _currentStep >= 0,
               state:
                   _currentStep >= 2 ? StepState.complete : StepState.disabled,

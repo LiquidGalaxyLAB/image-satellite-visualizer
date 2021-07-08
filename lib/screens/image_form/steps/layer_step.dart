@@ -3,18 +3,23 @@ import 'package:flutter/material.dart';
 class FilterStep extends StatefulWidget {
   final callback;
   final String layer;
+  final String selectedApi;
 
-  const FilterStep(this.layer, this.callback, {Key? key}) : super(key: key);
+  const FilterStep(this.layer, this.callback, this.selectedApi, {Key? key})
+      : super(key: key);
 
   @override
   _FilterStepState createState() => _FilterStepState();
 }
 
 class _FilterStepState extends State<FilterStep> {
-  final List<Item> _data = generateItems();
+  List<Item> _data = [];
 
   @override
   void initState() {
+    if (widget.selectedApi == "Nasa") _data = generateItems(nasaLayers);
+    if (widget.selectedApi == "SentinelHub")
+      _data = generateItems(sentinelHubLayers);
     _data[0].isExpanded = true;
     super.initState();
   }
@@ -79,19 +84,19 @@ class Item {
   });
 }
 
-List<Item> generateItems() {
+List<Item> generateItems(List<Map<String, dynamic>> layers) {
   return List<Item>.generate(
-    products.length,
+    layers.length,
     (int index) {
       return Item(
-        title: products[index]['title'],
-        components: products[index]['components'],
+        title: layers[index]['title'],
+        components: layers[index]['components'],
       );
     },
   );
 }
 
-List<Map<String, dynamic>> products = [
+List<Map<String, dynamic>> nasaLayers = [
   {
     "title": 'Terra',
     "components": [
@@ -124,6 +129,72 @@ List<Map<String, dynamic>> products = [
       "VIIRS_NOAA20_CorrectedReflectance_TrueColor",
       "VIIRS_NOAA20_CorrectedReflectance_BandsM11-I2-I1",
       "VIIRS_NOAA20_CorrectedReflectance_BandsM3-I3-M11",
+    ],
+  },
+];
+
+List<Map<String, dynamic>> sentinelHubLayers = [
+  {
+    "title": 'Band 1',
+    "components": [
+      "BATHYMETRIC",
+    ],
+  },
+  {
+    "title": 'Band 2',
+    "components": [
+      "NATURAL-COLOR",
+      "AGRICULTURE",
+      "GEOLOGY",
+      "TRUE-COLOR-S2L2A",
+    ],
+  },
+  {
+    "title": 'Band 3',
+    "components": [
+      "NATURAL-COLOR",
+      "FALSE-COLOR",
+      "BATHYMETRIC",
+      "TRUE-COLOR-S2L2A",
+    ],
+  },
+  {
+    "title": 'Band 4',
+    "components": [
+      "NATURAL-COLOR",
+      "FALSE-COLOR",
+      "NDVI",
+      "FALSE-COLOR-URBAN",
+      "SWIR",
+      "BATHYMETRIC",
+      "GEOLOGY",
+      "TRUE-COLOR-S2L2A",
+    ],
+  },
+  {
+    "title": 'Band 8',
+    "components": [
+      "FALSE-COLOR",
+      "NDVI",
+      "MOISTURE_INDEX",
+      "AGRICULTURE",
+    ],
+  },
+  {
+    "title": 'Band 11',
+    "components": [
+      "FALSE-COLOR-URBAN",
+      "MOISTURE_INDEX",
+      "SWIR",
+      "AGRICULTURE",
+    ],
+  },
+  {
+    "title": 'Band 12',
+    "components": [
+      "FALSE-COLOR-URBAN",
+      "SWIR",
+      "GEOLOGY",
     ],
   },
 ];

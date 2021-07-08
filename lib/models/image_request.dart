@@ -4,7 +4,7 @@ class ImageRequest {
   final Geodesy geodesy = Geodesy();
   final List<String> layers;
   final String time;
-  final Map<String, dynamic> bbox;
+  final Map<String, double> bbox;
 
   ImageRequest({
     required this.layers,
@@ -14,13 +14,13 @@ class ImageRequest {
 
   Map<String, String> getResolutions() {
     int height = (geodesy.distanceBetweenTwoGeoPoints(
-                LatLng(this.bbox['lat1'], this.bbox['lon1']),
-                LatLng(this.bbox['lat2'], this.bbox['lon1'])) /
+                LatLng(this.bbox['lat1']!, this.bbox['lon1']!),
+                LatLng(this.bbox['lat2']!, this.bbox['lon1']!)) /
             1000)
         .round();
     int width = (geodesy.distanceBetweenTwoGeoPoints(
-                LatLng(this.bbox['lat1'], this.bbox['lon1']),
-                LatLng(this.bbox['lat1'], this.bbox['lon2'])) /
+                LatLng(this.bbox['lat1']!, this.bbox['lon1']!),
+                LatLng(this.bbox['lat1']!, this.bbox['lon2']!)) /
             1000)
         .round();
     return {
@@ -32,7 +32,11 @@ class ImageRequest {
   String getBoundaries() =>
       '${this.bbox['lat1']},${this.bbox['lon1']},${this.bbox['lat2']},${this.bbox['lon2']}';
 
-  String getRequestUrl() {
+  String getNasaRequestUrl() {
     return "https://wvs.earthdata.nasa.gov/api/v1/snapshot?REQUEST=GetSnapshot&LAYERS=${this.layers.join(',')}&CRS=EPSG:4326&TIME=${this.time}&BBOX=${this.getBoundaries()}&FORMAT=image/jpeg&WIDTH=${this.getResolutions()["width"]}&HEIGHT=${this.getResolutions()["height"]}&AUTOSCALE=FALSE";
+  }
+
+  String getSentinelHubRequestUrl() {
+    return "https://services.sentinel-hub.com/ogc/wms/b54cb4a9-dbfc-4953-a1bf-12d6819d756b?REQUEST=GetMap&CRS=EPSG:4326&BBOX=${this.getBoundaries()}&LAYERS=${this.layers.join(',')}&MAXCC=20&WIDTH=${this.getResolutions()["width"]}&HEIGHT=${this.getResolutions()["height"]}&FORMAT=image/png&TIME=2018-03-29/2018-05-29";
   }
 }
