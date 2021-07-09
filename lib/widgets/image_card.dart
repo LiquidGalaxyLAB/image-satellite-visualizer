@@ -79,7 +79,37 @@ class _ImageCardState extends State<ImageCard> {
                 child: Row(
                   children: [
                     IconButton(
-                      onPressed: () => widget.image.delete(),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text("Delete"),
+                              content: Text(
+                                  "Are you sure that you want to delete this image?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    widget.image.delete();
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    "Delete",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text(
+                                    "Cancel",
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                       icon: Icon(Icons.delete),
                     ),
                     IconButton(

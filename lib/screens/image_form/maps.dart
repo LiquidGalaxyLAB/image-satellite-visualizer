@@ -32,7 +32,7 @@ class _MapsState extends State<Maps> {
   @override
   void initState() {
     BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5),
-            'assets/images/marker.png')
+            'assets/marker.png')
         .then((onValue) {
       pinLocationIcon = onValue;
     });
