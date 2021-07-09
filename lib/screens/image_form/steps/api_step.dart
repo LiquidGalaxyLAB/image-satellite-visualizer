@@ -45,7 +45,7 @@ class ApiStep extends StatelessWidget {
                       width: 300,
                       height: 300,
                       child: Image.asset(
-                        'assets/images/copernicus.png',
+                        'assets/copernicus.png',
                         fit: BoxFit.contain,
                         width: 100,
                       ),
@@ -97,7 +97,7 @@ class ApiStep extends StatelessWidget {
                       width: 300,
                       height: 300,
                       child: Image.asset(
-                        'assets/images/nasa.png',
+                        'assets/nasa.png',
                         fit: BoxFit.contain,
                         width: 100,
                       ),
@@ -147,7 +147,7 @@ class ApiStep extends StatelessWidget {
                       width: 300,
                       height: 300,
                       child: Image.asset(
-                        'assets/images/sentinelhub.png',
+                        'assets/sentinelhub.png',
                         fit: BoxFit.contain,
                         width: 100,
                       ),

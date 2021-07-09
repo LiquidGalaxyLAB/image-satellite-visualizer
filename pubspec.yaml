@@ -29,7 +29,4 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/copernicus.png
-    - assets/images/nasa.png
-    - assets/images/sentinelhub.png
-    - assets/images/marker.png
+    - assets/
