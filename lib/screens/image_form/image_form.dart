@@ -7,6 +7,7 @@ import 'package:image_satellite_visualizer/screens/image_form/steps/api_step.dar
 import 'package:image_satellite_visualizer/screens/image_form/steps/data_step.dart';
 import 'package:image_satellite_visualizer/screens/image_form/steps/final_step.dart';
 import 'package:image_satellite_visualizer/screens/image_form/steps/layer_step.dart';
+import 'package:geodesy/geodesy.dart' as geodesy;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
@@ -23,6 +24,7 @@ class ImageForm extends StatefulWidget {
 
 class _ImageFormState extends State<ImageForm> {
   Box? imageBox;
+  final geodesy.Geodesy geodesyLib = geodesy.Geodesy();
 
   int _currentStep = 0;
 
@@ -72,7 +74,7 @@ class _ImageFormState extends State<ImageForm> {
     }
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     File file = new File(path.join(documentDirectory.path,
-        '${DateTime.now().millisecondsSinceEpoch}.png'));
+        '${DateTime.now().millisecondsSinceEpoch}.jpeg'));
     file.writeAsBytesSync(response?.bodyBytes);
 
     print('imagePath: ${file.path}');
@@ -90,6 +92,7 @@ class _ImageFormState extends State<ImageForm> {
         description: descriptionController.text,
       ),
     );
+    Navigator.pop(context);
   }
 
   @override
@@ -164,18 +167,77 @@ class _ImageFormState extends State<ImageForm> {
 
   continued() {
     if (_currentStep < 3) {
-      setState(() => _currentStep += 1);
-      if (_currentStep == 3) {
-        createRequest();
+      if (_currentStep == 0) {
+        setState(() => _currentStep += 1);
+      } else if (_currentStep == 1) {
+        coordinatesCheck()
+            ? sizeCheck()
+                ? setState(() => _currentStep += 1)
+                : showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content:
+                            Text('Height/Width must not be greater than 3000'),
+                      );
+                    })
+            : showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Text('Coordinates are required'),
+                  );
+                });
+      } else if (_currentStep == 2) {
+        layer.isNotEmpty
+            ? setState(() {
+                try {
+                  createRequest();
+                  _currentStep += 1;
+                } catch (e) {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: Text(e.toString()),
+                        );
+                      });
+                }
+              })
+            : showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Text('Layer is required'),
+                  );
+                });
       }
     } else {
-      createImage();
-      Navigator.pop(context);
+      imagePath != null
+          ? infoCheck()
+              ? createImage()
+              : showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: Text('Name/Description is required'),
+                    );
+                  })
+          : showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: Text('Await for image'),
+                );
+              });
     }
   }
 
   cancel() {
-    if (_currentStep > 0) setState(() => _currentStep -= 1);
+    if (_currentStep > 0) {
+      if (_currentStep == 3) imagePath = null;
+      setState(() => _currentStep -= 1);
+    }
   }
 
   void setApi(String api) {
@@ -207,5 +269,48 @@ class _ImageFormState extends State<ImageForm> {
     setState(() {
       layer = incomingLayer;
     });
+  }
+
+  Map<String, String> getResolutions() {
+    int height = (geodesyLib.distanceBetweenTwoGeoPoints(
+              geodesy.LatLng(double.parse(coordinates['lat1Controller']!.text),
+                  double.parse(coordinates['lon1Controller']!.text)),
+              geodesy.LatLng(double.parse(coordinates['lat2Controller']!.text),
+                  double.parse(coordinates['lon1Controller']!.text)),
+            ) /
+            1000)
+        .round();
+    int width = (geodesyLib.distanceBetweenTwoGeoPoints(
+              geodesy.LatLng(double.parse(coordinates['lat1Controller']!.text),
+                  double.parse(coordinates['lon1Controller']!.text)),
+              geodesy.LatLng(double.parse(coordinates['lat1Controller']!.text),
+                  double.parse(coordinates['lon2Controller']!.text)),
+            ) /
+            1000)
+        .round();
+    return {
+      'height': height.toString(),
+      'width': width.toString(),
+    };
+  }
+
+  bool sizeCheck() {
+    return double.parse(getResolutions()['width']!) < 3000 ||
+            double.parse(getResolutions()['height']!) < 3000
+        ? true
+        : false;
+  }
+
+  bool coordinatesCheck() {
+    for (var element in coordinates.values) {
+      if (element.text.isEmpty) return false;
+    }
+    return true;
+  }
+
+  bool infoCheck() {
+    if (nameController.text.isEmpty || descriptionController.text.isEmpty)
+      return false;
+    return true;
   }
 }

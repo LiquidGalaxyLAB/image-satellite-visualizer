@@ -37,6 +37,6 @@ class ImageRequest {
   }
 
   String getSentinelHubRequestUrl() {
-    return "https://services.sentinel-hub.com/ogc/wms/b54cb4a9-dbfc-4953-a1bf-12d6819d756b?REQUEST=GetMap&CRS=EPSG:4326&BBOX=${this.getBoundaries()}&LAYERS=${this.layers.join(',')}&MAXCC=20&WIDTH=${this.getResolutions()["width"]}&HEIGHT=${this.getResolutions()["height"]}&FORMAT=image/png&TIME=2018-03-29/2018-05-29";
+    return "https://services.sentinel-hub.com/ogc/wms/b54cb4a9-dbfc-4953-a1bf-12d6819d756b?REQUEST=GetMap&CRS=EPSG:4326&BBOX=${this.getBoundaries()}&LAYERS=${this.layers.join(',')}&WIDTH=${this.getResolutions()["width"]}&HEIGHT=${this.getResolutions()["height"]}&FORMAT=image/jpeg&TIME=2018-03-29/2018-05-29";
   }
 }

@@ -286,7 +286,7 @@ class _MapsState extends State<Maps> {
                       sizeCheck()
                           ? Container()
                           : Text(
-                              'Height/Width must not be greate than 3000',
+                              'Height/Width must not be greater than 3000',
                               style: TextStyle(
                                 color: Colors.red[700],
                               ),
