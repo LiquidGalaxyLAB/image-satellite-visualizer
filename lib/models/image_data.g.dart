@@ -20,19 +20,22 @@ class ImageDataAdapter extends TypeAdapter<ImageData> {
       imagePath: fields[0] as String,
       title: fields[1] as String,
       description: fields[2] as String,
+      coordinates: fields[3] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ImageData obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.imagePath)
       ..writeByte(1)
       ..write(obj.title)
       ..writeByte(2)
-      ..write(obj.description);
+      ..write(obj.description)
+      ..writeByte(3)
+      ..write(obj.coordinates);
   }
 
   @override

@@ -20,6 +20,7 @@ class _FilterStepState extends State<FilterStep> {
     if (widget.selectedApi == "Nasa") _data = generateItems(nasaLayers);
     if (widget.selectedApi == "SentinelHub")
       _data = generateItems(sentinelHubLayers);
+    if (widget.selectedApi == "Copernicus") _data = generateItems(copernicusLayers);
     _data[0].isExpanded = true;
     super.initState();
   }
@@ -191,6 +192,72 @@ List<Map<String, dynamic>> sentinelHubLayers = [
   },
   {
     "title": 'Band 12',
+    "components": [
+      "FALSE-COLOR-URBAN",
+      "SWIR",
+      "GEOLOGY",
+    ],
+  },
+];
+
+List<Map<String, dynamic>> copernicusLayers = [
+  {
+    "title": 'Sentinel 2 - Band 1',
+    "components": [
+      "BATHYMETRIC",
+    ],
+  },
+  {
+    "title": 'Sentinel 2 - Band 2',
+    "components": [
+      "NATURAL-COLOR",
+      "AGRICULTURE",
+      "GEOLOGY",
+      "TRUE-COLOR-S2L2A",
+    ],
+  },
+  {
+    "title": 'Sentinel 2 - Band 3',
+    "components": [
+      "NATURAL-COLOR",
+      "FALSE-COLOR",
+      "BATHYMETRIC",
+      "TRUE-COLOR-S2L2A",
+    ],
+  },
+  {
+    "title": 'Sentinel 2 - Band 4',
+    "components": [
+      "NATURAL-COLOR",
+      "FALSE-COLOR",
+      "NDVI",
+      "FALSE-COLOR-URBAN",
+      "SWIR",
+      "BATHYMETRIC",
+      "GEOLOGY",
+      "TRUE-COLOR-S2L2A",
+    ],
+  },
+  {
+    "title": 'Sentinel 2 - Band 8',
+    "components": [
+      "FALSE-COLOR",
+      "NDVI",
+      "MOISTURE_INDEX",
+      "AGRICULTURE",
+    ],
+  },
+  {
+    "title": 'Sentinel 2 - Band 11',
+    "components": [
+      "FALSE-COLOR-URBAN",
+      "MOISTURE_INDEX",
+      "SWIR",
+      "AGRICULTURE",
+    ],
+  },
+  {
+    "title": 'Sentinel 2 - Band 12',
     "components": [
       "FALSE-COLOR-URBAN",
       "SWIR",

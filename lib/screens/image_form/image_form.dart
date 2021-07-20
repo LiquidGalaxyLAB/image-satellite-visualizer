@@ -23,6 +23,7 @@ class ImageForm extends StatefulWidget {
 }
 
 class _ImageFormState extends State<ImageForm> {
+  RegExp regex = RegExp("&URL=(.*)");
   Box? imageBox;
   final geodesy.Geodesy geodesyLib = geodesy.Geodesy();
 
@@ -40,6 +41,7 @@ class _ImageFormState extends State<ImageForm> {
   String? imagePath;
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  String coordinateString = "";
 
   void createRequest() async {
     var minLat = min(double.parse(coordinates['lat1Controller']!.text),
@@ -64,34 +66,53 @@ class _ImageFormState extends State<ImageForm> {
       bbox: bbox,
     );
 
-    var response;
+    String url;
     if (selectedApi == "Nasa") {
-      response = await http.get(Uri.parse(request.getNasaRequestUrl()));
+      url = request.getNasaRequestUrl();
       print(request.getNasaRequestUrl());
     } else if (selectedApi == "SentinelHub") {
-      response = await http.get(Uri.parse(request.getSentinelHubRequestUrl()));
+      url = request.getSentinelHubRequestUrl();
       print(request.getSentinelHubRequestUrl());
+    } else {
+      var match = regex.firstMatch(request.getCopernicusRequestUrl())?.group(1);
+      url = match!;
+      print(match);
     }
-    Directory documentDirectory = await getApplicationDocumentsDirectory();
-    File file = new File(path.join(documentDirectory.path,
-        '${DateTime.now().millisecondsSinceEpoch}.jpeg'));
-    file.writeAsBytesSync(response?.bodyBytes);
 
-    print('imagePath: ${file.path}');
-
-    setState(() {
-      imagePath = file.path;
-    });
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      Directory documentDirectory = await getApplicationDocumentsDirectory();
+      File file = new File(path.join(documentDirectory.path,
+          '${DateTime.now().millisecondsSinceEpoch}.jpeg'));
+      file.writeAsBytesSync(response.bodyBytes);
+      setState(() {
+        imagePath = file.path;
+        coordinateString =
+            '$minLat,$minLon $minLat,$maxLon, $maxLat,$minLon $maxLat,$maxLon';
+      });
+    } else {
+      setState(() {
+        _currentStep--;
+      });
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text('Error fetching image'),
+            );
+          });
+    }
   }
 
   void createImage() {
-    imageBox?.add(
-      ImageData(
-        imagePath: imagePath!,
-        title: nameController.text,
-        description: descriptionController.text,
-      ),
+    var imageData = ImageData(
+      imagePath: imagePath!,
+      title: nameController.text,
+      description: descriptionController.text,
+      coordinates: coordinateString,
     );
+    print('result: ' + imageData.toString());
+    imageBox?.add(imageData);
     Navigator.pop(context);
   }
 
