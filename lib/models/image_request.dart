@@ -1,31 +1,56 @@
 import 'package:geodesy/geodesy.dart';
+import 'package:image_satellite_visualizer/models/resolution.dart';
 
 class ImageRequest {
   final Geodesy geodesy = Geodesy();
   final List<String> layers;
   final String time;
   final Map<String, double> bbox;
+  final Resolution resolution;
 
   ImageRequest({
     required this.layers,
     required this.time,
     required this.bbox,
+    required this.resolution,
   });
 
   Map<String, String> getResolutions() {
-    int height = (geodesy.distanceBetweenTwoGeoPoints(
-                LatLng(this.bbox['lat1']!, this.bbox['lon1']!),
-                LatLng(this.bbox['lat2']!, this.bbox['lon1']!)) /
-            1000)
-        .round();
-    int width = (geodesy.distanceBetweenTwoGeoPoints(
-                LatLng(this.bbox['lat1']!, this.bbox['lon1']!),
-                LatLng(this.bbox['lat1']!, this.bbox['lon2']!)) /
-            1000)
-        .round();
+    double height = (geodesy.distanceBetweenTwoGeoPoints(
+            LatLng(this.bbox['lat1']!, this.bbox['lon1']!),
+            LatLng(this.bbox['lat2']!, this.bbox['lon1']!)) /
+        1000);
+    double width = (geodesy.distanceBetweenTwoGeoPoints(
+            LatLng(this.bbox['lat1']!, this.bbox['lon1']!),
+            LatLng(this.bbox['lat1']!, this.bbox['lon2']!)) /
+        1000);
+
+    switch (this.resolution) {
+      case Resolution.m250:
+        height *= 4;
+        width *= 4;
+        break;
+      case Resolution.m500:
+        height *= 2;
+        width *= 2;
+        break;
+      case Resolution.km1:
+        height *= 1;
+        width *= 1;
+        break;
+      case Resolution.km5:
+        height *= 0.2;
+        width *= 0.2;
+        break;
+      case Resolution.km10:
+        height *= 0.1;
+        width *= 0.1;
+        break;
+    }
+
     return {
-      'height': height.toString(),
-      'width': width.toString(),
+      'height': height.round().toString(),
+      'width': width.round().toString(),
     };
   }
 

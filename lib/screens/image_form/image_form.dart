@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_satellite_visualizer/models/image_data.dart';
 import 'package:image_satellite_visualizer/models/image_request.dart';
+import 'package:image_satellite_visualizer/models/resolution.dart';
 import 'package:image_satellite_visualizer/screens/image_form/steps/api_step.dart';
 import 'package:image_satellite_visualizer/screens/image_form/steps/data_step.dart';
 import 'package:image_satellite_visualizer/screens/image_form/steps/final_step.dart';
@@ -42,6 +43,7 @@ class _ImageFormState extends State<ImageForm> {
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   String coordinateString = "";
+  Resolution resolution = Resolution.km1;
 
   void createRequest() async {
     var minLat = min(double.parse(coordinates['lat1Controller']!.text),
@@ -64,6 +66,7 @@ class _ImageFormState extends State<ImageForm> {
       layers: [layer],
       time: '2020-03-30',
       bbox: bbox,
+      resolution: resolution,
     );
 
     String url;
@@ -153,10 +156,13 @@ class _ImageFormState extends State<ImageForm> {
             Step(
               title: new Text('Location and date'),
               content: DataStep(
-                  textControllers: coordinates,
-                  date: date,
-                  coordinateCallback: setCoordinates,
-                  dateCallback: setDate),
+                textControllers: coordinates,
+                date: date,
+                resolution: resolution,
+                coordinateCallback: setCoordinates,
+                resolutionCallback: setResolution,
+                dateCallback: setDate,
+              ),
               isActive: _currentStep >= 0,
               state:
                   _currentStep >= 1 ? StepState.complete : StepState.disabled,
@@ -277,6 +283,12 @@ class _ImageFormState extends State<ImageForm> {
           markers.values.elementAt(1).position.latitude.toString();
       coordinates['lon2Controller']?.text =
           markers.values.elementAt(1).position.longitude.toString();
+    });
+  }
+
+  void setResolution(Resolution newResolution) {
+    setState(() {
+      resolution = newResolution;
     });
   }
 

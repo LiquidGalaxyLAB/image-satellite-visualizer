@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_satellite_visualizer/models/resolution.dart';
 import 'package:image_satellite_visualizer/screens/image_form/maps.dart';
 
 class DataStep extends StatelessWidget {
   final coordinateCallback;
+  final resolutionCallback;
   final dateCallback;
   final Map<String, TextEditingController> textControllers;
   final DateTime date;
+  final Resolution resolution;
 
   const DataStep({
     required this.textControllers,
     required this.date,
     required this.coordinateCallback,
     required this.dateCallback,
+    required this.resolutionCallback,
+    required this.resolution,
     Key? key,
   }) : super(key: key);
 
@@ -141,8 +146,12 @@ class DataStep extends StatelessWidget {
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              Maps(callback: this.setLocation)),
+                        builder: (context) => Maps(
+                          coordiantesCallback: this.setLocation,
+                          resolutionCallback: this.setResolution,
+                          resolution: resolution,
+                        ),
+                      ),
                     ),
                   ),
                 )
@@ -193,6 +202,10 @@ class DataStep extends StatelessWidget {
 
   void setLocation(Map<MarkerId, Marker> markers) {
     coordinateCallback(markers);
+  }
+
+  void setResolution(Resolution resolution) {
+    resolutionCallback(resolution);
   }
 
   Future<void> _selectDate(BuildContext context) async {

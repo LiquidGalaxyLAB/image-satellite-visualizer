@@ -3,10 +3,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geodesy/geodesy.dart' as geodesy;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_satellite_visualizer/models/resolution.dart';
 
 class Maps extends StatefulWidget {
-  final callback;
-  const Maps({required this.callback, Key? key}) : super(key: key);
+  final coordiantesCallback;
+  final resolutionCallback;
+  final Resolution resolution;
+  const Maps(
+      {required this.coordiantesCallback,
+      required this.resolutionCallback,
+      required this.resolution,
+      Key? key})
+      : super(key: key);
 
   @override
   _MapsState createState() => _MapsState();
@@ -29,13 +37,16 @@ class _MapsState extends State<Maps> {
 
   List<bool> isSelected = [false, true];
 
+  late Resolution mapsResolution;
+
   @override
   void initState() {
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5),
-            'assets/marker.png')
+    BitmapDescriptor.fromAssetImage(
+            ImageConfiguration(devicePixelRatio: 2.5), 'assets/marker.png')
         .then((onValue) {
       pinLocationIcon = onValue;
     });
+    mapsResolution = widget.resolution;
     super.initState();
   }
 
@@ -55,7 +66,8 @@ class _MapsState extends State<Maps> {
             },
             markers: Set<Marker>.of(markers.values),
             polygons: Set<Polygon>.of(polygons.values),
-            onTap: (LatLng position) => isSelected[0] ? _addMarker(position) : null,
+            onTap: (LatLng position) =>
+                isSelected[0] ? _addMarker(position) : null,
           ),
           Align(
             alignment: Alignment.topLeft,
@@ -90,6 +102,69 @@ class _MapsState extends State<Maps> {
                   ),
                   Column(
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: InputDecorator(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                            contentPadding: EdgeInsets.all(10),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: mapsResolution.toString(),
+                              isDense: true,
+                              isExpanded: true,
+                              items: [
+                                DropdownMenuItem(
+                                  child: Text("250m"),
+                                  value: Resolution.m250.toString(),
+                                ),
+                                DropdownMenuItem(
+                                  child: Text("500m"),
+                                  value: Resolution.m500.toString(),
+                                ),
+                                DropdownMenuItem(
+                                  child: Text("1km"),
+                                  value: Resolution.km1.toString(),
+                                ),
+                                DropdownMenuItem(
+                                  child: Text("5km"),
+                                  value: Resolution.km5.toString(),
+                                ),
+                                DropdownMenuItem(
+                                  child: Text("10km"),
+                                  value: Resolution.km10.toString(),
+                                ),
+                              ],
+                              onChanged: (newValue) {
+                                Resolution newResolution = Resolution.km1;
+                                switch (newValue) {
+                                  case "Resolution.m250":
+                                    newResolution = Resolution.m250;
+                                    break;
+                                  case "Resolution.m500":
+                                    newResolution = Resolution.m500;
+                                    break;
+                                  case "Resolution.km1":
+                                    newResolution = Resolution.km1;
+                                    break;
+                                  case "Resolution.km5":
+                                    newResolution = Resolution.km5;
+                                    break;
+                                  case "Resolution.km10":
+                                    newResolution = Resolution.km10;
+                                    break;
+                                }
+                                setState(() {
+                                  mapsResolution = newResolution;
+                                });
+                                widget.resolutionCallback(newResolution);
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Container(
@@ -309,7 +384,7 @@ class _MapsState extends State<Maps> {
                                 ),
                                 child: Text('CONTINUE'),
                                 onPressed: () {
-                                  this.widget.callback(markers);
+                                  this.widget.coordiantesCallback(markers);
                                   Navigator.pop(context);
                                 },
                               ),
@@ -426,25 +501,47 @@ class _MapsState extends State<Maps> {
   }
 
   Map<String, String> getResolutions() {
-    int height = (geodesyLib.distanceBetweenTwoGeoPoints(
-              geodesy.LatLng(markers.values.elementAt(0).position.latitude,
-                  markers.values.elementAt(0).position.longitude),
-              geodesy.LatLng(markers.values.elementAt(1).position.latitude,
-                  markers.values.elementAt(0).position.longitude),
-            ) /
-            1000)
-        .round();
-    int width = (geodesyLib.distanceBetweenTwoGeoPoints(
-              geodesy.LatLng(markers.values.elementAt(0).position.latitude,
-                  markers.values.elementAt(0).position.longitude),
-              geodesy.LatLng(markers.values.elementAt(0).position.latitude,
-                  markers.values.elementAt(1).position.longitude),
-            ) /
-            1000)
-        .round();
+    double height = (geodesyLib.distanceBetweenTwoGeoPoints(
+          geodesy.LatLng(markers.values.elementAt(0).position.latitude,
+              markers.values.elementAt(0).position.longitude),
+          geodesy.LatLng(markers.values.elementAt(1).position.latitude,
+              markers.values.elementAt(0).position.longitude),
+        ) /
+        1000);
+    double width = (geodesyLib.distanceBetweenTwoGeoPoints(
+          geodesy.LatLng(markers.values.elementAt(0).position.latitude,
+              markers.values.elementAt(0).position.longitude),
+          geodesy.LatLng(markers.values.elementAt(0).position.latitude,
+              markers.values.elementAt(1).position.longitude),
+        ) /
+        1000);
+
+    switch (mapsResolution) {
+      case Resolution.m250:
+        height *= 4;
+        width *= 4;
+        break;
+      case Resolution.m500:
+        height *= 2;
+        width *= 2;
+        break;
+      case Resolution.km1:
+        height *= 1;
+        width *= 1;
+        break;
+      case Resolution.km5:
+        height *= 0.2;
+        width *= 0.2;
+        break;
+      case Resolution.km10:
+        height *= 0.1;
+        width *= 0.1;
+        break;
+    }
+
     return {
-      'height': height.toString(),
-      'width': width.toString(),
+      'height': height.round().toString(),
+      'width': width.round().toString(),
     };
   }
 
