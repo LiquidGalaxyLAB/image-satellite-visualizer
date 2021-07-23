@@ -118,7 +118,9 @@ class _ImageCardState extends State<ImageCard> {
                     ),
                     Spacer(),
                     IconButton(
-                      onPressed: () => print('SEND'),
+                      onPressed: () {
+                        print(widget.image.generateKml());
+                      },
                       icon: Icon(
                         Icons.send,
                         color: Theme.of(context).accentColor,
