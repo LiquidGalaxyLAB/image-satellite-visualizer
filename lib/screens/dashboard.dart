@@ -16,6 +16,11 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   Box? imageBox;
+  Box? settingsBox;
+
+  TextEditingController ipTextController = TextEditingController();
+  TextEditingController usernameTextController = TextEditingController();
+  TextEditingController passwordTextController = TextEditingController();
 
   List<Widget> imageCards(bool demo, List images) {
     List<Widget> list = [];
@@ -34,6 +39,7 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     imageBox = Hive.box('imageBox');
+    settingsBox = Hive.box('liquidGalaxySettings');
   }
 
   @override
@@ -67,7 +73,81 @@ class _DashboardState extends State<Dashboard> {
             Padding(
               padding: EdgeInsets.only(right: screenSize.width * 0.01),
               child: TextButton(
-                onPressed: () => print('LIQUID GALAXY'),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: SingleChildScrollView(
+                          child: Container(
+                            width: screenSize.width * 0.6,
+                            height: screenSize.height * 0.5,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: screenSize.height * 0.015,
+                                    horizontal: screenSize.height * 0.015,
+                                  ),
+                                  child: TextField(
+                                    keyboardType: TextInputType.number,
+                                    controller: ipTextController,
+                                    decoration: new InputDecoration(
+                                      hintText: 'IP',
+                                      labelText: 'IP',
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: screenSize.height * 0.015,
+                                    horizontal: screenSize.height * 0.015,
+                                  ),
+                                  child: TextField(
+                                    controller: usernameTextController,
+                                    decoration: new InputDecoration(
+                                      hintText: 'Username',
+                                      labelText: 'Username',
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: screenSize.height * 0.015,
+                                    horizontal: screenSize.height * 0.015,
+                                  ),
+                                  child: TextField(
+                                    obscureText: true,
+                                    controller: passwordTextController,
+                                    decoration: new InputDecoration(
+                                      hintText: 'Password',
+                                      labelText: 'Password',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text("CANCEL", style: TextStyle(color: Colors.grey[600]),),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                          TextButton(
+                            child: Text("SET", style: TextStyle(color: Theme.of(context).accentColor),),
+                            onPressed: () {
+                              settingsBox?.put('ip', ipTextController.text);
+                              settingsBox?.put('username', usernameTextController.text);
+                              settingsBox?.put('password', passwordTextController.text);
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
                 child: Icon(Icons.wifi, color: Colors.white),
               ),
             ),
@@ -117,7 +197,6 @@ class _DashboardState extends State<Dashboard> {
               ],
             ),
             ValueListenableBuilder(
-              
               valueListenable: Hive.box('imageBox').listenable(),
               builder: (context, box, widget) {
                 return ListView(

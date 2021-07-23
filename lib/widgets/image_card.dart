@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:image_satellite_visualizer/models/client.dart';
 import 'package:image_satellite_visualizer/models/image_data.dart';
 
 class ImageCard extends StatefulWidget {
@@ -13,12 +14,12 @@ class ImageCard extends StatefulWidget {
 }
 
 class _ImageCardState extends State<ImageCard> {
-  Box? imageBox;
+  Box? settingsBox;
 
   @override
   void initState() {
     super.initState();
-    imageBox = Hive.box('imageBox');
+    settingsBox = Hive.box('liquidGalaxySettings');
   }
 
   @override
@@ -119,7 +120,27 @@ class _ImageCardState extends State<ImageCard> {
                     Spacer(),
                     IconButton(
                       onPressed: () {
-                        print(widget.image.generateKml());
+                        Client client = Client(
+                          ip: settingsBox?.get('ip'),
+                          username: settingsBox?.get('username'),
+                          password: settingsBox?.get('password'),
+                          image: widget.image,
+                        );
+                        try {
+                          client.createClient();
+                        } catch (e) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text("Error sending image"),
+                                content: Text(
+                                  e.toString(),
+                                ),
+                              );
+                            },
+                          );
+                        }
                       },
                       icon: Icon(
                         Icons.send,

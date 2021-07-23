@@ -19,6 +19,9 @@ dependencies:
   http: ^0.13.3
   path_provider: ^2.0.2
   geodesy: ^0.4.0-nullsafety.0
+  ssh:
+    git:
+      url: https://github.com/octaviomuller/flutter_ssh
 
 dev_dependencies:
   flutter_test:
