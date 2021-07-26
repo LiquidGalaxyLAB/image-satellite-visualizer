@@ -42,7 +42,7 @@ class _ImageFormState extends State<ImageForm> {
   String? imagePath;
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  String coordinateString = "";
+  Map<String, String> coordinatesMap = {};
   Resolution resolution = Resolution.km1;
 
   void createRequest() async {
@@ -90,8 +90,12 @@ class _ImageFormState extends State<ImageForm> {
       file.writeAsBytesSync(response.bodyBytes);
       setState(() {
         imagePath = file.path;
-        coordinateString =
-            '$minLat,$minLon $minLat,$maxLon, $maxLat,$minLon $maxLat,$maxLon';
+        coordinatesMap = {
+          'minLat': minLat.toString(),
+          'minLon': minLon.toString(),
+          'maxLat': maxLat.toString(),
+          'maxLon': maxLon.toString(),
+        };
       });
     } else {
       setState(() {
@@ -112,7 +116,7 @@ class _ImageFormState extends State<ImageForm> {
       imagePath: imagePath!,
       title: nameController.text,
       description: descriptionController.text,
-      coordinates: coordinateString,
+      coordinates: coordinatesMap,
     );
     print('result: ' + imageData.toString());
     imageBox?.add(imageData);

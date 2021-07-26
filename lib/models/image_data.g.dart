@@ -20,7 +20,7 @@ class ImageDataAdapter extends TypeAdapter<ImageData> {
       imagePath: fields[0] as String,
       title: fields[1] as String,
       description: fields[2] as String,
-      coordinates: fields[3] as String,
+      coordinates: (fields[3] as Map).cast<String, String>(),
     );
   }
 

@@ -17,7 +17,7 @@ class ImageData extends HiveObject{
   final String description;
 
   @HiveField(3)
-  final String coordinates;
+  final Map<String, String> coordinates;
 
   ImageData({
     required this.imagePath,
@@ -40,11 +40,11 @@ class ImageData extends HiveObject{
     <viewBoundScale>0.75</viewBoundScale>
   </Icon>
   <LatLonBox>
-    <north>-30.0402700200105</north>
-    <south>-36.7537780813232</south>
-    <east>-51.26031686487932</east>
-    <west>-58.3012549790517</west>
-    <rotation>-12.76215744018555</rotation>
+    <north>${this.coordinates['minLat']}</north>
+    <south>${this.coordinates['maxLat']}</south>
+    <east>${this.coordinates['minLon']}</east>
+    <west>${this.coordinates['maxLon']}</west>
+    <rotation>0</rotation>
   </LatLonBox>
 </GroundOverlay>
 </kml>
