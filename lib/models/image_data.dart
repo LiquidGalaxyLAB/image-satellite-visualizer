@@ -49,7 +49,6 @@ class ImageData extends HiveObject{
 </GroundOverlay>
 </kml>
     ''';
-    print(content);
     file.writeAsString(content);
 
     return file;
