@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class FilterStep extends StatefulWidget {
@@ -20,21 +22,24 @@ class _FilterStepState extends State<FilterStep> {
     if (widget.selectedApi == "Nasa") _data = generateItems(nasaLayers);
     if (widget.selectedApi == "SentinelHub")
       _data = generateItems(sentinelHubLayers);
-    if (widget.selectedApi == "Copernicus") _data = generateItems(copernicusLayers);
+    if (widget.selectedApi == "Copernicus")
+      _data = generateItems(copernicusLayers);
     _data[0].isExpanded = true;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+
     return SingleChildScrollView(
       child: Container(
-        child: _buildPanel(),
+        child: _buildPanel(screenSize),
       ),
     );
   }
 
-  Widget _buildPanel() {
+  Widget _buildPanel(Size screenSize) {
     return ExpansionPanelList(
       expansionCallback: (int index, bool isExpanded) {
         setState(() {
@@ -56,11 +61,64 @@ class _FilterStepState extends State<FilterStep> {
               item.components.length,
               (index) => InkWell(
                 onTap: () {
-                  widget.callback(item.components[index]);
+                  widget.callback(item.components[index]['value']);
                 },
                 child: ListTile(
-                  title: Text(item.components[index]),
-                  tileColor: item.components[index] == widget.layer
+                  title: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(item.components[index]['name']!),
+                      Spacer(),
+                      Padding(
+                        padding: EdgeInsets.all(screenSize.height * 0.008),
+                        child: IconButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title:
+                                        Text(item.components[index]['name']!),
+                                    content: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                            height: screenSize.height * 0.4,
+                                            width: screenSize.height * 0.4,
+                                            child: Image.asset(
+                                              item.components[index]['image']!,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    screenSize.width * 0.03),
+                                            child: Text(
+                                              item.components[index]
+                                                  ['description']!,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 6,
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                });
+                          },
+                          icon: Icon(Icons.info),
+                          splashRadius: screenSize.height * 0.035,
+                        ),
+                      ),
+                    ],
+                  ),
+                  tileColor: item.components[index]['value'] == widget.layer
                       ? Colors.grey[200]
                       : Colors.grey[50],
                 ),
@@ -76,7 +134,7 @@ class _FilterStepState extends State<FilterStep> {
 
 class Item {
   final String title;
-  final List<String> components;
+  final List<Map<String, String>> components;
   bool isExpanded = false;
 
   Item({
@@ -101,35 +159,79 @@ List<Map<String, dynamic>> nasaLayers = [
   {
     "title": 'Terra',
     "components": [
-      "MODIS_Terra_CorrectedReflectance_TrueColor",
-      "MODIS_Terra_CorrectedReflectance_Bands721",
-      "MODIS_Terra_CorrectedReflectance_Bands367",
+      {
+        "value": "MODIS_Terra_CorrectedReflectance_TrueColor",
+        "name": "MODIS True Color - Terra Corrected Reflectance",
+        "image": "assets/examples/modis_truecolor.png",
+        "description":
+            "These images are called true-color or natural color because this combination of wavelengths is similar to what the human eye would see. The images are natural-looking images of land surface, oceanic and atmospheric features. The downside of this set of bands is that they tend to produce a hazy image.",
+      },
+      {
+        "value": "MODIS_Terra_CorrectedReflectance_Bands721",
+        "name": "MODIS Bands 7-2-1 - Terra Corrected Reflectance",
+        "image": "assets/examples/modis_721.png",
+        "description":
+            "This combination is most useful for distinguishing burn scars from naturally low vegetation or bare soil and enhancing floods. This combination can also be used to distinguish snow and ice from clouds. Snow and ice are very reflective in the visible part of the spectrum (Band 1), and absorbent in Bands 2 (near infrared) and 7 (short-wave infrared, or SWIR). Thick ice and snow appear vivid sky blue, while small ice crystals in high-level clouds will also appear blueish, and water clouds will appear white.",
+      },
+      {
+        "value": "MODIS_Terra_CorrectedReflectance_Bands367",
+        "name": "MODIS Bands 3-6-7 - Terra Corrected Reflectance",
+        "image": "assets/examples/modis_367.png",
+        "description":
+            "This combination is used to map snow and ice. Snow and ice are very reflective in the visible part of the spectrum (Band 3), and very absorbent in Bands 6 and 7 (short-wave infrared, or SWIR). This band combination is good for distinguishing liquid water from frozen water, for example, clouds over snow, ice cloud versus water cloud; or floods from dense vegetation. This band combination is only available for MODIS (Terra) because 70% of the band 6 sensors on the MODIS instrument on NASA's Aqua satellite failed shortly after launch.",
+      },
     ],
   },
   {
     "title": 'Aqua',
     "components": [
-      "MODIS_Aqua_CorrectedReflectance_TrueColor",
-      "MODIS_Aqua_CorrectedReflectance_Bands721",
+      {
+        "value": "MODIS_Aqua_CorrectedReflectance_TrueColor",
+        "name": "MODIS True Color - Aqua Corrected Reflectance",
+        "image": "assets/examples/aqua_truecolor.png",
+        "description":
+            "These images are called true-color or natural color because this combination of wavelengths is similar to what the human eye would see. The images are natural-looking images of land surface, oceanic and atmospheric features. The downside of this set of bands is that they tend to produce a hazy image.",
+      },
+      {
+        "value": "MODIS_Aqua_CorrectedReflectance_Bands721",
+        "name": "MODIS Bands 7-2-1 - Aqua Corrected Reflectance",
+        "image": "assets/examples/aqua_721.png",
+        "description":
+            "This combination is most useful for distinguishing burn scars from naturally low vegetation or bare soil and enhancing floods. This combination can also be used to distinguish snow and ice from clouds. Snow and ice are very reflective in the visible part of the spectrum (Band 1), and absorbent in Bands 2 (near infrared) and 7 (short-wave infrared, or SWIR). Thick ice and snow appear vivid sky blue, while small ice crystals in high-level clouds will also appear blueish, and water clouds will appear white.",
+      },
     ],
   },
   {
     "title": 'VIIRS SNPP',
     "components": [
-      "VIIRS_SNPP_CorrectedReflectance_TrueColor",
-      "VIIRS_SNPP_CorrectedReflectance_BandsM11-I2-I1",
-      "VIIRS_SNPP_CorrectedReflectance_BandsM3-I3-M11",
-      "VIIRS_SNPP_DayNightBand_At_Sensor_Radiance",
-      "VIIRS_SNPP_DayNightBand_AtSensor_M15",
-      "VIIRS_SNPP_DayNightBand_ENCC",
-    ],
-  },
-  {
-    "title": 'VIIRS NOAA20',
-    "components": [
-      "VIIRS_NOAA20_CorrectedReflectance_TrueColor",
-      "VIIRS_NOAA20_CorrectedReflectance_BandsM11-I2-I1",
-      "VIIRS_NOAA20_CorrectedReflectance_BandsM3-I3-M11",
+      {
+        "value": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+        "name": "VIIRS True Color - SNPP Corrected Reflectance",
+        "image": "assets/examples/viirs_truecolor.png",
+        "description":
+            "These images are called true-color or natural color because this combination of wavelengths is similar to what the human eye would see. The images are natural-looking images of land surface, oceanic and atmospheric features.",
+      },
+      {
+        "value": "VIIRS_SNPP_CorrectedReflectance_BandsM11-I2-I1",
+        "name": "VIIRS Bands M11-I2-I1 - SNPP Corrected Reflectance",
+        "image": "assets/examples/viirs_m11.png",
+        "description":
+            "This combination is most useful for distinguishing burn scars from naturally low vegetation or bare soil and enhancing floods. This combination can also be used to distinguish snow and ice from clouds. Snow and ice are very reflective in the visible part of the spectrum (Band I1), and absorbent in Bands I2 (near infrared) and M11 (short-wave infrared, or SWIR). Thick ice and snow appear vivid sky blue, while small ice crystals in high-level clouds will also appear blueish, and water clouds will appear white. The VIIRS instrument in aboard the joint NASA/NOAA Suomi NPP satellite.",
+      },
+      {
+        "value": "VIIRS_SNPP_CorrectedReflectance_BandsM3-I3-M11",
+        "name": "VIIRS Bands M3-I3-M111 - SNPP Corrected Reflectance",
+        "image": "assets/examples/viirs_m3.png",
+        "description":
+            "This combination is used to map snow and ice. Snow and ice are very reflective in the visible part of the spectrum (Band M3), and very absorbent in Bands I3 and M11 (short-wave infrared, or SWIR). This band combination is good for distinguishing liquid water from frozen water, for example, clouds over snow, ice cloud versus water cloud; or floods from dense vegetation. The VIIRS instrument in aboard the joint NASA/NOAA Suomi NPP satellite.",
+      },
+      {
+        "value": "VIIRS_SNPP_DayNightBand_ENCC",
+        "name": "VIIR SNPP Day/Night Band, ENCC (Nighttime imagery)",
+        "image": "assets/examples/viirs_daynight.png",
+        "description":
+            "The VIIRS Nighttime Imagery (Day/Night Band, Enhanced Near Constant Contrast) shows the Earth’s surface and atmosphere using a sensor designed to capture low-light emission sources, under varying illumination conditions. It is displayed as a grayscale image. Sources of illumination include both natural and anthropogenic sources of light emissions. Lunar reflection can be used to highlight the location and features of clouds and other terrestrial features such as sea ice and snow cover when there is partial to full moon conditions. When there is no moonlight, natural and anthropogenic night time light emissions are highlighted such as city lights, lightning, upper-atmospheric gravity waves, auroras, fires, gas flares, and fishing fleets. This layer is useful for displaying cities and highways at night, the tracking of shipping and fishing fleets, as well as fires and the burning of waste natural gas (gas flares) from on and offshore oil/gas production sites.",
+      },
     ],
   },
 ];
@@ -138,64 +240,209 @@ List<Map<String, dynamic>> sentinelHubLayers = [
   {
     "title": 'Band 1',
     "components": [
-      "BATHYMETRIC",
+      {
+        "value": "BATHYMETRIC",
+        "name": "Bathymetric",
+        "image": "assets/examples/bathymetric.png",
+        "description":
+            "The main goal of the script is to identify shallow water depths (up to 18 meters) for selected area and specific scene. Sentinel Hub services provide cost-effective and fast evaluation of shallow bathymetry compared to extensive sonar or in-situ measurements of depth. Nevertheless, if input parameters scale (m1) and offset (m0) for calculation of Satellite Derived Bathymetry (SDB) are unknown, at least 5-10 calibration points with known depth [1] and minor work of the platform are needed. For some locations, bathymetry data can be found online or one could make in-situ measurements.",
+      },
     ],
   },
   {
     "title": 'Band 2',
     "components": [
-      "NATURAL-COLOR",
-      "AGRICULTURE",
-      "GEOLOGY",
-      "TRUE-COLOR-S2L2A",
+      {
+        "value": "NATURAL-COLOR",
+        "name": "Natural Color",
+        "image": "assets/examples/natural_color.png",
+        "description":
+            "The natural color band combination uses the red (B4), green (B3), and blue (B2) channels. Its purpose is to display imagery the same way our eyes see the world. Just like how we see, healthy vegetation is green. Next, urban features often appear white and grey. Finally, water is a shade of dark blue depending on how clean it is.",
+      },
+      {
+        "value": "AGRICULTURE",
+        "name": "Agriculture",
+        "image": "assets/examples/agriculture.png",
+        "description":
+            "This composite, often called the Agriculture RGB composite, uses bands SWIR-1 (B11), near-infrared (B08) and blue (B02). It’s mostly used to monitor crop health, as both short-wave and near infrared bands are particularly good at highlighting dense vegetation, which appears dark green in the composite. SWIR measurements can help scientists estimate how much water is present in plants and soil, as water reflects SWIR light. Shortwave-infrared bands are also useful for distinguishing between snow, and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage.",
+      },
+      {
+        "value": "GEOLOGY",
+        "name": "Geology",
+        "image": "assets/examples/geology.png",
+        "description":
+            "This composite, often called the Agriculture RGB composite, uses bands SWIR-1 (B11), near-infrared (B08) and blue (B02). It’s mostly used to monitor crop health, as both short-wave and near infrared bands are particularly good at highlighting dense vegetation, which appears dark green in the composite. SWIR measurements can help scientists estimate how much water is present in plants and soil, as water reflects SWIR light. Shortwave-infrared bands are also useful for distinguishing between snow, and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage.",
+      },
     ],
   },
   {
     "title": 'Band 3',
     "components": [
-      "NATURAL-COLOR",
-      "FALSE-COLOR",
-      "BATHYMETRIC",
-      "TRUE-COLOR-S2L2A",
+      {
+        "value": "NATURAL-COLOR",
+        "name": "Natural Color",
+        "image": "assets/examples/natural_color.png",
+        "description":
+            "The natural color band combination uses the red (B4), green (B3), and blue (B2) channels. Its purpose is to display imagery the same way our eyes see the world. Just like how we see, healthy vegetation is green. Next, urban features often appear white and grey. Finally, water is a shade of dark blue depending on how clean it is.",
+      },
+      {
+        "value": "FALSE-COLOR",
+        "name": "False Color",
+        "image": "assets/examples/false_color.png",
+        "description":
+            "False color imagery is displayed in a combination of standard near infra-red, red and green band. False color composite using near infrared, red and green bands is very popular. It is most commonly used to assess plant density and healht, as plants reflect near infrared and green light, while absorbing red. Since they reflect more near infrared than green, plant-covered land appears deep red. Denser plant growth is darker red. Cities and exposed ground are gray or tan, and water appears blue or black.",
+      },
+      {
+        "value": "BATHYMETRIC",
+        "name": "Bathymetric",
+        "image": "assets/examples/bathymetric.png",
+        "description":
+            "The main goal of the script is to identify shallow water depths (up to 18 meters) for selected area and specific scene. Sentinel Hub services provide cost-effective and fast evaluation of shallow bathymetry compared to extensive sonar or in-situ measurements of depth. Nevertheless, if input parameters scale (m1) and offset (m0) for calculation of Satellite Derived Bathymetry (SDB) are unknown, at least 5-10 calibration points with known depth [1] and minor work of the platform are needed. For some locations, bathymetry data can be found online or one could make in-situ measurements.",
+      },
     ],
   },
   {
     "title": 'Band 4',
     "components": [
-      "NATURAL-COLOR",
-      "FALSE-COLOR",
-      "NDVI",
-      "FALSE-COLOR-URBAN",
-      "SWIR",
-      "BATHYMETRIC",
-      "GEOLOGY",
-      "TRUE-COLOR-S2L2A",
+      {
+        "value": "NATURAL-COLOR",
+        "name": "Natural Color",
+        "image": "assets/examples/natural_color.png",
+        "description":
+            "The natural color band combination uses the red (B4), green (B3), and blue (B2) channels. Its purpose is to display imagery the same way our eyes see the world. Just like how we see, healthy vegetation is green. Next, urban features often appear white and grey. Finally, water is a shade of dark blue depending on how clean it is.",
+      },
+      {
+        "value": "FALSE-COLOR",
+        "name": "False Color",
+        "image": "assets/examples/false_color.png",
+        "description":
+            "False color imagery is displayed in a combination of standard near infra-red, red and green band. False color composite using near infrared, red and green bands is very popular. It is most commonly used to assess plant density and healht, as plants reflect near infrared and green light, while absorbing red. Since they reflect more near infrared than green, plant-covered land appears deep red. Denser plant growth is darker red. Cities and exposed ground are gray or tan, and water appears blue or black.",
+      },
+      {
+        "value": "NDVI",
+        "name": "Normalized difference vegetation index",
+        "image": "assets/examples/ndvi.png",
+        "description": "The well known and widely used NDVI is a simple, but effective index for quantifying green vegetation. It normalizes green leaf scattering in Near Infra-red wavelengths with chlorophyll absorption in red wavelengths.",
+      },
+      {
+        "value": "FALSE-COLOR-URBAN",
+        "name": "False Color Urban Composite",
+        "image": "assets/examples/false_color_urban.png",
+        "description":
+            "This composite is used to visualize urbanized areas more clearly. Vegetation is visible in shades of green, while urbanized areas are represented by white, grey, or purple. Soils, sand, and minerals are shown in a variety of colors. Snow and ice appear as dark blue, and water as black or blue. Flooded areas are very dark blue and almost black. The composite is useful for detecting wildfires and calderas of volcanoes, as they are displayed in shades of red and yellow.",
+      },
+      {
+        "value": "SWIR",
+        "name": "SWIR",
+        "image": "assets/examples/swir.png",
+        "description":
+            "Short wave infrared (SWIR) bands 11 and 12 can help scientists estimate how much water is present in plants and soil, as water reflects SWIR wavelengths. Shortwave-infrared bands are also useful for distinguishing between cloud types (water clouds versus ice clouds), snow and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage. Each rock type reflects shortwave infrared light differently, making it possible to map out geology by comparing reflected SWIR light. In this composite, B8A is reflected by vegetation and shown in the green channel, while the reflected red band, highlighting bare soil and built up areas, is shown in the blue channel.",
+      },
+      {
+        "value": "BATHYMETRIC",
+        "name": "Bathymetric",
+        "image": "assets/examples/bathymetric.png",
+        "description":
+            "The main goal of the script is to identify shallow water depths (up to 18 meters) for selected area and specific scene. Sentinel Hub services provide cost-effective and fast evaluation of shallow bathymetry compared to extensive sonar or in-situ measurements of depth. Nevertheless, if input parameters scale (m1) and offset (m0) for calculation of Satellite Derived Bathymetry (SDB) are unknown, at least 5-10 calibration points with known depth [1] and minor work of the platform are needed. For some locations, bathymetry data can be found online or one could make in-situ measurements.",
+      },
+      {
+        "value": "GEOLOGY",
+        "name": "Geology",
+        "image": "assets/examples/geology.png",
+        "description":
+            "This composite, often called the Agriculture RGB composite, uses bands SWIR-1 (B11), near-infrared (B08) and blue (B02). It’s mostly used to monitor crop health, as both short-wave and near infrared bands are particularly good at highlighting dense vegetation, which appears dark green in the composite. SWIR measurements can help scientists estimate how much water is present in plants and soil, as water reflects SWIR light. Shortwave-infrared bands are also useful for distinguishing between snow, and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage.",
+      },
     ],
   },
   {
     "title": 'Band 8',
     "components": [
-      "FALSE-COLOR",
-      "NDVI",
-      "MOISTURE_INDEX",
-      "AGRICULTURE",
+      {
+        "value": "FALSE-COLOR",
+        "name": "False Color",
+        "image": "assets/examples/false_color.png",
+        "description":
+            "False color imagery is displayed in a combination of standard near infra-red, red and green band. False color composite using near infrared, red and green bands is very popular. It is most commonly used to assess plant density and healht, as plants reflect near infrared and green light, while absorbing red. Since they reflect more near infrared than green, plant-covered land appears deep red. Denser plant growth is darker red. Cities and exposed ground are gray or tan, and water appears blue or black.",
+      },
+      {
+        "value": "NDVI",
+        "name": "Normalized difference vegetation index",
+        "image": "assets/examples/ndvi.png",
+        "description": "The well known and widely used NDVI is a simple, but effective index for quantifying green vegetation. It normalizes green leaf scattering in Near Infra-red wavelengths with chlorophyll absorption in red wavelengths.",
+      },
+      {
+        "value": "MOISTURE-INDEX",
+        "name": "Normalized Difference Moisture Index",
+        "image": "assets/examples/moisture_index.png",
+        "description":
+            "The NDMI is a normalized difference moisture index, that uses NIR and SWIR bands to display moisture. The SWIR band reflects changes in both the vegetation water content and the spongy mesophyll structure in vegetation canopies, while the NIR reflectance is affected by leaf internal structure and leaf dry matter content but not by water content. The combination of the NIR with the SWIR removes variations induced by leaf internal structure and leaf dry matter content, improving the accuracy in retrieving the vegetation water content.",
+      },
+      {
+        "value": "AGRICULTURE",
+        "name": "Agriculture",
+        "image": "assets/examples/agriculture.png",
+        "description":
+            "This composite, often called the Agriculture RGB composite, uses bands SWIR-1 (B11), near-infrared (B08) and blue (B02). It’s mostly used to monitor crop health, as both short-wave and near infrared bands are particularly good at highlighting dense vegetation, which appears dark green in the composite. SWIR measurements can help scientists estimate how much water is present in plants and soil, as water reflects SWIR light. Shortwave-infrared bands are also useful for distinguishing between snow, and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage.",
+      },
     ],
   },
   {
     "title": 'Band 11',
     "components": [
-      "FALSE-COLOR-URBAN",
-      "MOISTURE_INDEX",
-      "SWIR",
-      "AGRICULTURE",
+      {
+        "value": "FALSE-COLOR-URBAN",
+        "name": "False Color Urban Composite",
+        "image": "assets/examples/false_color_urban.png",
+        "description":
+            "This composite is used to visualize urbanized areas more clearly. Vegetation is visible in shades of green, while urbanized areas are represented by white, grey, or purple. Soils, sand, and minerals are shown in a variety of colors. Snow and ice appear as dark blue, and water as black or blue. Flooded areas are very dark blue and almost black. The composite is useful for detecting wildfires and calderas of volcanoes, as they are displayed in shades of red and yellow.",
+      },
+      {
+        "value": "MOISTURE-INDEX",
+        "name": "Normalized Difference Moisture Index",
+        "image": "assets/examples/moisture_index.png",
+        "description":
+            "The NDMI is a normalized difference moisture index, that uses NIR and SWIR bands to display moisture. The SWIR band reflects changes in both the vegetation water content and the spongy mesophyll structure in vegetation canopies, while the NIR reflectance is affected by leaf internal structure and leaf dry matter content but not by water content. The combination of the NIR with the SWIR removes variations induced by leaf internal structure and leaf dry matter content, improving the accuracy in retrieving the vegetation water content.",
+      },
+      {
+        "value": "SWIR",
+        "name": "SWIR",
+        "image": "assets/examples/swir.png",
+        "description":
+            "Short wave infrared (SWIR) bands 11 and 12 can help scientists estimate how much water is present in plants and soil, as water reflects SWIR wavelengths. Shortwave-infrared bands are also useful for distinguishing between cloud types (water clouds versus ice clouds), snow and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage. Each rock type reflects shortwave infrared light differently, making it possible to map out geology by comparing reflected SWIR light. In this composite, B8A is reflected by vegetation and shown in the green channel, while the reflected red band, highlighting bare soil and built up areas, is shown in the blue channel.",
+      },
+      {
+        "value": "AGRICULTURE",
+        "name": "Agriculture",
+        "image": "assets/examples/agriculture.png",
+        "description":
+            "This composite, often called the Agriculture RGB composite, uses bands SWIR-1 (B11), near-infrared (B08) and blue (B02). It’s mostly used to monitor crop health, as both short-wave and near infrared bands are particularly good at highlighting dense vegetation, which appears dark green in the composite. SWIR measurements can help scientists estimate how much water is present in plants and soil, as water reflects SWIR light. Shortwave-infrared bands are also useful for distinguishing between snow, and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage.",
+      },
     ],
   },
   {
     "title": 'Band 12',
     "components": [
-      "FALSE-COLOR-URBAN",
-      "SWIR",
-      "GEOLOGY",
+      {
+        "value": "FALSE-COLOR-URBAN",
+        "name": "False Color Urban Composite",
+        "image": "assets/examples/false_color_urban.png",
+        "description":
+            "This composite is used to visualize urbanized areas more clearly. Vegetation is visible in shades of green, while urbanized areas are represented by white, grey, or purple. Soils, sand, and minerals are shown in a variety of colors. Snow and ice appear as dark blue, and water as black or blue. Flooded areas are very dark blue and almost black. The composite is useful for detecting wildfires and calderas of volcanoes, as they are displayed in shades of red and yellow.",
+      },
+      {
+        "value": "SWIR",
+        "name": "SWIR",
+        "image": "assets/examples/swir.png",
+        "description":
+            "Short wave infrared (SWIR) bands 11 and 12 can help scientists estimate how much water is present in plants and soil, as water reflects SWIR wavelengths. Shortwave-infrared bands are also useful for distinguishing between cloud types (water clouds versus ice clouds), snow and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage. Each rock type reflects shortwave infrared light differently, making it possible to map out geology by comparing reflected SWIR light. In this composite, B8A is reflected by vegetation and shown in the green channel, while the reflected red band, highlighting bare soil and built up areas, is shown in the blue channel.",
+      },
+      {
+        "value": "GEOLOGY",
+        "name": "Geology",
+        "image": "assets/examples/geology.png",
+        "description":
+            "This composite, often called the Agriculture RGB composite, uses bands SWIR-1 (B11), near-infrared (B08) and blue (B02). It’s mostly used to monitor crop health, as both short-wave and near infrared bands are particularly good at highlighting dense vegetation, which appears dark green in the composite. SWIR measurements can help scientists estimate how much water is present in plants and soil, as water reflects SWIR light. Shortwave-infrared bands are also useful for distinguishing between snow, and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage.",
+      },
     ],
   },
 ];
@@ -204,64 +451,209 @@ List<Map<String, dynamic>> copernicusLayers = [
   {
     "title": 'Sentinel 2 - Band 1',
     "components": [
-      "BATHYMETRIC",
+      {
+        "value": "BATHYMETRIC",
+        "name": "Bathymetric",
+        "image": "assets/examples/bathymetric.png",
+        "description":
+            "The main goal of the script is to identify shallow water depths (up to 18 meters) for selected area and specific scene. Sentinel Hub services provide cost-effective and fast evaluation of shallow bathymetry compared to extensive sonar or in-situ measurements of depth. Nevertheless, if input parameters scale (m1) and offset (m0) for calculation of Satellite Derived Bathymetry (SDB) are unknown, at least 5-10 calibration points with known depth [1] and minor work of the platform are needed. For some locations, bathymetry data can be found online or one could make in-situ measurements.",
+      },
     ],
   },
   {
     "title": 'Sentinel 2 - Band 2',
     "components": [
-      "NATURAL-COLOR",
-      "AGRICULTURE",
-      "GEOLOGY",
-      "TRUE-COLOR-S2L2A",
+      {
+        "value": "NATURAL-COLOR",
+        "name": "Natural Color",
+        "image": "assets/examples/natural_color.png",
+        "description":
+            "The natural color band combination uses the red (B4), green (B3), and blue (B2) channels. Its purpose is to display imagery the same way our eyes see the world. Just like how we see, healthy vegetation is green. Next, urban features often appear white and grey. Finally, water is a shade of dark blue depending on how clean it is.",
+      },
+      {
+        "value": "AGRICULTURE",
+        "name": "Agriculture",
+        "image": "assets/examples/agriculture.png",
+        "description":
+            "This composite, often called the Agriculture RGB composite, uses bands SWIR-1 (B11), near-infrared (B08) and blue (B02). It’s mostly used to monitor crop health, as both short-wave and near infrared bands are particularly good at highlighting dense vegetation, which appears dark green in the composite. SWIR measurements can help scientists estimate how much water is present in plants and soil, as water reflects SWIR light. Shortwave-infrared bands are also useful for distinguishing between snow, and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage.",
+      },
+      {
+        "value": "GEOLOGY",
+        "name": "Geology",
+        "image": "assets/examples/geology.png",
+        "description":
+            "This composite, often called the Agriculture RGB composite, uses bands SWIR-1 (B11), near-infrared (B08) and blue (B02). It’s mostly used to monitor crop health, as both short-wave and near infrared bands are particularly good at highlighting dense vegetation, which appears dark green in the composite. SWIR measurements can help scientists estimate how much water is present in plants and soil, as water reflects SWIR light. Shortwave-infrared bands are also useful for distinguishing between snow, and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage.",
+      },
     ],
   },
   {
     "title": 'Sentinel 2 - Band 3',
     "components": [
-      "NATURAL-COLOR",
-      "FALSE-COLOR",
-      "BATHYMETRIC",
-      "TRUE-COLOR-S2L2A",
+      {
+        "value": "NATURAL-COLOR",
+        "name": "Natural Color",
+        "image": "assets/examples/natural_color.png",
+        "description":
+            "The natural color band combination uses the red (B4), green (B3), and blue (B2) channels. Its purpose is to display imagery the same way our eyes see the world. Just like how we see, healthy vegetation is green. Next, urban features often appear white and grey. Finally, water is a shade of dark blue depending on how clean it is.",
+      },
+      {
+        "value": "FALSE-COLOR",
+        "name": "False Color",
+        "image": "assets/examples/false_color.png",
+        "description":
+            "False color imagery is displayed in a combination of standard near infra-red, red and green band. False color composite using near infrared, red and green bands is very popular. It is most commonly used to assess plant density and healht, as plants reflect near infrared and green light, while absorbing red. Since they reflect more near infrared than green, plant-covered land appears deep red. Denser plant growth is darker red. Cities and exposed ground are gray or tan, and water appears blue or black.",
+      },
+      {
+        "value": "BATHYMETRIC",
+        "name": "Bathymetric",
+        "image": "assets/examples/bathymetric.png",
+        "description":
+            "The main goal of the script is to identify shallow water depths (up to 18 meters) for selected area and specific scene. Sentinel Hub services provide cost-effective and fast evaluation of shallow bathymetry compared to extensive sonar or in-situ measurements of depth. Nevertheless, if input parameters scale (m1) and offset (m0) for calculation of Satellite Derived Bathymetry (SDB) are unknown, at least 5-10 calibration points with known depth [1] and minor work of the platform are needed. For some locations, bathymetry data can be found online or one could make in-situ measurements.",
+      },
     ],
   },
   {
     "title": 'Sentinel 2 - Band 4',
     "components": [
-      "NATURAL-COLOR",
-      "FALSE-COLOR",
-      "NDVI",
-      "FALSE-COLOR-URBAN",
-      "SWIR",
-      "BATHYMETRIC",
-      "GEOLOGY",
-      "TRUE-COLOR-S2L2A",
+      {
+        "value": "NATURAL-COLOR",
+        "name": "Natural Color",
+        "image": "assets/examples/natural_color.png",
+        "description":
+            "The natural color band combination uses the red (B4), green (B3), and blue (B2) channels. Its purpose is to display imagery the same way our eyes see the world. Just like how we see, healthy vegetation is green. Next, urban features often appear white and grey. Finally, water is a shade of dark blue depending on how clean it is.",
+      },
+      {
+        "value": "FALSE-COLOR",
+        "name": "False Color",
+        "image": "assets/examples/false_color.png",
+        "description":
+            "False color imagery is displayed in a combination of standard near infra-red, red and green band. False color composite using near infrared, red and green bands is very popular. It is most commonly used to assess plant density and healht, as plants reflect near infrared and green light, while absorbing red. Since they reflect more near infrared than green, plant-covered land appears deep red. Denser plant growth is darker red. Cities and exposed ground are gray or tan, and water appears blue or black.",
+      },
+      {
+        "value": "NDVI",
+        "name": "Normalized difference vegetation index",
+        "image": "assets/examples/ndvi.png",
+        "description": "The well known and widely used NDVI is a simple, but effective index for quantifying green vegetation. It normalizes green leaf scattering in Near Infra-red wavelengths with chlorophyll absorption in red wavelengths.",
+      },
+      {
+        "value": "FALSE-COLOR-URBAN",
+        "name": "False Color Urban Composite",
+        "image": "assets/examples/false_color_urban.png",
+        "description":
+            "This composite is used to visualize urbanized areas more clearly. Vegetation is visible in shades of green, while urbanized areas are represented by white, grey, or purple. Soils, sand, and minerals are shown in a variety of colors. Snow and ice appear as dark blue, and water as black or blue. Flooded areas are very dark blue and almost black. The composite is useful for detecting wildfires and calderas of volcanoes, as they are displayed in shades of red and yellow.",
+      },
+      {
+        "value": "SWIR",
+        "name": "SWIR",
+        "image": "assets/examples/swir.png",
+        "description":
+            "Short wave infrared (SWIR) bands 11 and 12 can help scientists estimate how much water is present in plants and soil, as water reflects SWIR wavelengths. Shortwave-infrared bands are also useful for distinguishing between cloud types (water clouds versus ice clouds), snow and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage. Each rock type reflects shortwave infrared light differently, making it possible to map out geology by comparing reflected SWIR light. In this composite, B8A is reflected by vegetation and shown in the green channel, while the reflected red band, highlighting bare soil and built up areas, is shown in the blue channel.",
+      },
+      {
+        "value": "BATHYMETRIC",
+        "name": "Bathymetric",
+        "image": "assets/examples/bathymetric.png",
+        "description":
+            "The main goal of the script is to identify shallow water depths (up to 18 meters) for selected area and specific scene. Sentinel Hub services provide cost-effective and fast evaluation of shallow bathymetry compared to extensive sonar or in-situ measurements of depth. Nevertheless, if input parameters scale (m1) and offset (m0) for calculation of Satellite Derived Bathymetry (SDB) are unknown, at least 5-10 calibration points with known depth [1] and minor work of the platform are needed. For some locations, bathymetry data can be found online or one could make in-situ measurements.",
+      },
+      {
+        "value": "GEOLOGY",
+        "name": "Geology",
+        "image": "assets/examples/geology.png",
+        "description":
+            "This composite, often called the Agriculture RGB composite, uses bands SWIR-1 (B11), near-infrared (B08) and blue (B02). It’s mostly used to monitor crop health, as both short-wave and near infrared bands are particularly good at highlighting dense vegetation, which appears dark green in the composite. SWIR measurements can help scientists estimate how much water is present in plants and soil, as water reflects SWIR light. Shortwave-infrared bands are also useful for distinguishing between snow, and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage.",
+      },
     ],
   },
   {
     "title": 'Sentinel 2 - Band 8',
     "components": [
-      "FALSE-COLOR",
-      "NDVI",
-      "MOISTURE_INDEX",
-      "AGRICULTURE",
+      {
+        "value": "FALSE-COLOR",
+        "name": "False Color",
+        "image": "assets/examples/false_color.png",
+        "description":
+            "False color imagery is displayed in a combination of standard near infra-red, red and green band. False color composite using near infrared, red and green bands is very popular. It is most commonly used to assess plant density and healht, as plants reflect near infrared and green light, while absorbing red. Since they reflect more near infrared than green, plant-covered land appears deep red. Denser plant growth is darker red. Cities and exposed ground are gray or tan, and water appears blue or black.",
+      },
+      {
+        "value": "NDVI",
+        "name": "Normalized difference vegetation index",
+        "image": "assets/examples/ndvi.png",
+        "description": "The well known and widely used NDVI is a simple, but effective index for quantifying green vegetation. It normalizes green leaf scattering in Near Infra-red wavelengths with chlorophyll absorption in red wavelengths.",
+      },
+      {
+        "value": "MOISTURE-INDEX",
+        "name": "Normalized Difference Moisture Index",
+        "image": "assets/examples/moisture_index.png",
+        "description":
+            "The NDMI is a normalized difference moisture index, that uses NIR and SWIR bands to display moisture. The SWIR band reflects changes in both the vegetation water content and the spongy mesophyll structure in vegetation canopies, while the NIR reflectance is affected by leaf internal structure and leaf dry matter content but not by water content. The combination of the NIR with the SWIR removes variations induced by leaf internal structure and leaf dry matter content, improving the accuracy in retrieving the vegetation water content.",
+      },
+      {
+        "value": "AGRICULTURE",
+        "name": "Agriculture",
+        "image": "assets/examples/agriculture.png",
+        "description":
+            "This composite, often called the Agriculture RGB composite, uses bands SWIR-1 (B11), near-infrared (B08) and blue (B02). It’s mostly used to monitor crop health, as both short-wave and near infrared bands are particularly good at highlighting dense vegetation, which appears dark green in the composite. SWIR measurements can help scientists estimate how much water is present in plants and soil, as water reflects SWIR light. Shortwave-infrared bands are also useful for distinguishing between snow, and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage.",
+      },
     ],
   },
   {
     "title": 'Sentinel 2 - Band 11',
     "components": [
-      "FALSE-COLOR-URBAN",
-      "MOISTURE_INDEX",
-      "SWIR",
-      "AGRICULTURE",
+      {
+        "value": "FALSE-COLOR-URBAN",
+        "name": "False Color Urban Composite",
+        "image": "assets/examples/false_color_urban.png",
+        "description":
+            "This composite is used to visualize urbanized areas more clearly. Vegetation is visible in shades of green, while urbanized areas are represented by white, grey, or purple. Soils, sand, and minerals are shown in a variety of colors. Snow and ice appear as dark blue, and water as black or blue. Flooded areas are very dark blue and almost black. The composite is useful for detecting wildfires and calderas of volcanoes, as they are displayed in shades of red and yellow.",
+      },
+      {
+        "value": "MOISTURE-INDEX",
+        "name": "Normalized Difference Moisture Index",
+        "image": "assets/examples/moisture_index.png",
+        "description":
+            "The NDMI is a normalized difference moisture index, that uses NIR and SWIR bands to display moisture. The SWIR band reflects changes in both the vegetation water content and the spongy mesophyll structure in vegetation canopies, while the NIR reflectance is affected by leaf internal structure and leaf dry matter content but not by water content. The combination of the NIR with the SWIR removes variations induced by leaf internal structure and leaf dry matter content, improving the accuracy in retrieving the vegetation water content.",
+      },
+      {
+        "value": "SWIR",
+        "name": "SWIR",
+        "image": "assets/examples/swir.png",
+        "description":
+            "Short wave infrared (SWIR) bands 11 and 12 can help scientists estimate how much water is present in plants and soil, as water reflects SWIR wavelengths. Shortwave-infrared bands are also useful for distinguishing between cloud types (water clouds versus ice clouds), snow and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage. Each rock type reflects shortwave infrared light differently, making it possible to map out geology by comparing reflected SWIR light. In this composite, B8A is reflected by vegetation and shown in the green channel, while the reflected red band, highlighting bare soil and built up areas, is shown in the blue channel.",
+      },
+      {
+        "value": "AGRICULTURE",
+        "name": "Agriculture",
+        "image": "assets/examples/agriculture.png",
+        "description":
+            "This composite, often called the Agriculture RGB composite, uses bands SWIR-1 (B11), near-infrared (B08) and blue (B02). It’s mostly used to monitor crop health, as both short-wave and near infrared bands are particularly good at highlighting dense vegetation, which appears dark green in the composite. SWIR measurements can help scientists estimate how much water is present in plants and soil, as water reflects SWIR light. Shortwave-infrared bands are also useful for distinguishing between snow, and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage.",
+      },
     ],
   },
   {
     "title": 'Sentinel 2 - Band 12',
     "components": [
-      "FALSE-COLOR-URBAN",
-      "SWIR",
-      "GEOLOGY",
+      {
+        "value": "FALSE-COLOR-URBAN",
+        "name": "False Color Urban Composite",
+        "image": "assets/examples/false_color_urban.png",
+        "description":
+            "This composite is used to visualize urbanized areas more clearly. Vegetation is visible in shades of green, while urbanized areas are represented by white, grey, or purple. Soils, sand, and minerals are shown in a variety of colors. Snow and ice appear as dark blue, and water as black or blue. Flooded areas are very dark blue and almost black. The composite is useful for detecting wildfires and calderas of volcanoes, as they are displayed in shades of red and yellow.",
+      },
+      {
+        "value": "SWIR",
+        "name": "SWIR",
+        "image": "assets/examples/swir.png",
+        "description":
+            "Short wave infrared (SWIR) bands 11 and 12 can help scientists estimate how much water is present in plants and soil, as water reflects SWIR wavelengths. Shortwave-infrared bands are also useful for distinguishing between cloud types (water clouds versus ice clouds), snow and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage. Each rock type reflects shortwave infrared light differently, making it possible to map out geology by comparing reflected SWIR light. In this composite, B8A is reflected by vegetation and shown in the green channel, while the reflected red band, highlighting bare soil and built up areas, is shown in the blue channel.",
+      },
+      {
+        "value": "GEOLOGY",
+        "name": "Geology",
+        "image": "assets/examples/geology.png",
+        "description":
+            "This composite, often called the Agriculture RGB composite, uses bands SWIR-1 (B11), near-infrared (B08) and blue (B02). It’s mostly used to monitor crop health, as both short-wave and near infrared bands are particularly good at highlighting dense vegetation, which appears dark green in the composite. SWIR measurements can help scientists estimate how much water is present in plants and soil, as water reflects SWIR light. Shortwave-infrared bands are also useful for distinguishing between snow, and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage.",
+      },
     ],
   },
 ];
