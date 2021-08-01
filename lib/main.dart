@@ -9,6 +9,7 @@ void main() async {
   Hive.registerAdapter(ImageDataAdapter());
   await Hive.openBox('imageBox');
   await Hive.openBox('liquidGalaxySettings');
+  await Hive.openBox('selectedImages');
   runApp(MyApp());
 }
 

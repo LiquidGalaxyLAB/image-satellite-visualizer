@@ -17,7 +17,7 @@ class Client {
     required this.image,
   });
 
-  void createClient() async {
+  void sendImage(String syncFile) async {
     try {
       var client = new SSHClient(
         host: this.ip,
@@ -48,8 +48,7 @@ class Client {
         },
       );
 
-      await client.execute('echo "http://lg1:81/${image.getFileName()}.kml" >> /var/www/html/image_satellite_visualizer.txt');
-      await client.execute('cat /var/www/html/image_satellite_visualizer.txt >> /var/www/html/kmls.txt');
+      await client.execute('echo "$syncFile" > /var/www/html/kmls.txt');
     } catch (e) {
       print("error: $e");
     }

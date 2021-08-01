@@ -6,8 +6,10 @@ import 'package:image_satellite_visualizer/models/client.dart';
 import 'package:image_satellite_visualizer/models/image_data.dart';
 
 class ImageCard extends StatefulWidget {
-  const ImageCard({Key? key, required this.image}) : super(key: key);
+  const ImageCard({Key? key, required this.image, required this.callback})
+      : super(key: key);
   final ImageData image;
+  final callback;
 
   @override
   _ImageCardState createState() => _ImageCardState();
@@ -15,11 +17,19 @@ class ImageCard extends StatefulWidget {
 
 class _ImageCardState extends State<ImageCard> {
   Box? settingsBox;
+  Box? selectedImagesBox;
+
+  TextEditingController titleEditingController = TextEditingController();
+  TextEditingController descriptionEditingController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     settingsBox = Hive.box('liquidGalaxySettings');
+    selectedImagesBox = Hive.box('selectedImages');
+    print('image title: ' + widget.image.title);
+    titleEditingController.text = widget.image.title;
+    descriptionEditingController.text = widget.image.description;
   }
 
   @override
@@ -114,12 +124,89 @@ class _ImageCardState extends State<ImageCard> {
                       icon: Icon(Icons.delete),
                     ),
                     IconButton(
-                      onPressed: () => print('EDIT'),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: SingleChildScrollView(
+                                  child: Container(
+                                    width: screenSize.width * 0.6,
+                                    height: screenSize.height * 0.5,
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: screenSize.height * 0.015,
+                                            horizontal:
+                                                screenSize.height * 0.015,
+                                          ),
+                                          child: TextField(
+                                            controller: titleEditingController,
+                                            decoration: new InputDecoration(
+                                              hintText: 'Title',
+                                              labelText: 'Title',
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: screenSize.height * 0.015,
+                                            horizontal:
+                                                screenSize.height * 0.015,
+                                          ),
+                                          child: TextField(
+                                            maxLines: 8,
+                                            controller: descriptionEditingController,
+                                            decoration: new InputDecoration(
+                                              hintText: 'Description',
+                                              labelText: 'Description',
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    child: Text(
+                                      "CANCEL",
+                                      style: TextStyle(color: Colors.grey[600]),
+                                    ),
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
+                                  TextButton(
+                                    child: Text(
+                                      "SET",
+                                      style: TextStyle(
+                                          color: Theme.of(context).accentColor),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        widget.image.title = titleEditingController.text;
+                                        widget.image.description = descriptionEditingController.text;
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
+                      },
                       icon: Icon(Icons.edit),
                     ),
                     Spacer(),
                     IconButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        widget.callback(widget.image);
+                        widget.image.selected
+                            ? await selectedImagesBox?.put(
+                                'http://lg1:81/${widget.image.getFileName()}.kml',
+                                'http://lg1:81/${widget.image.getFileName()}.kml')
+                            : await selectedImagesBox?.delete(
+                                'http://lg1:81/${widget.image.getFileName()}.kml');
+
                         Client client = Client(
                           ip: settingsBox?.get('ip'),
                           username: settingsBox?.get('username'),
@@ -127,7 +214,8 @@ class _ImageCardState extends State<ImageCard> {
                           image: widget.image,
                         );
                         try {
-                          client.createClient();
+                          client.sendImage(
+                              selectedImagesBox!.values.toList().join('\n'));
                         } catch (e) {
                           showDialog(
                             context: context,
@@ -143,7 +231,9 @@ class _ImageCardState extends State<ImageCard> {
                         }
                       },
                       icon: Icon(
-                        Icons.send,
+                        widget.image.selected
+                            ? Icons.remove_circle
+                            : Icons.send,
                         color: Theme.of(context).accentColor,
                       ),
                     ),

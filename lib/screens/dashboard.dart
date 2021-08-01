@@ -18,6 +18,8 @@ class _DashboardState extends State<Dashboard> {
   Box? imageBox;
   Box? settingsBox;
 
+  List<dynamic> _foundImages = [];
+
   TextEditingController ipTextController = TextEditingController();
   TextEditingController usernameTextController = TextEditingController();
   TextEditingController passwordTextController = TextEditingController();
@@ -28,7 +30,7 @@ class _DashboardState extends State<Dashboard> {
       list.add(
         Container(
           padding: const EdgeInsets.all(8.0),
-          child: demo ? ImageCardDemo(image: image) : ImageCard(image: image),
+          child: demo ? ImageCardDemo(image: image) : ImageCard(image: image, callback: setSelection),
         ),
       );
     }
@@ -40,6 +42,7 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     imageBox = Hive.box('imageBox');
     settingsBox = Hive.box('liquidGalaxySettings');
+    _foundImages = imageBox!.values.toList();
   }
 
   @override
@@ -49,6 +52,7 @@ class _DashboardState extends State<Dashboard> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text('Image Satellite Visualizer'),
           bottom: TabBar(
@@ -167,6 +171,7 @@ class _DashboardState extends State<Dashboard> {
                       screenSize.height * 0.01,
                     ),
                     child: TextField(
+                      onChanged: (value) => _runFilter(value),
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search),
                         labelText: 'Search',
@@ -180,7 +185,7 @@ class _DashboardState extends State<Dashboard> {
                     return Expanded(
                       flex: 8,
                       child: GridView.count(
-                        children: imageCards(false, imageBox!.values.toList()),
+                        children: imageCards(false, _foundImages),
                         childAspectRatio: 0.8,
                         crossAxisSpacing: screenSize.width * 0.03,
                         crossAxisCount: 3,
@@ -216,5 +221,30 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
     );
+  }
+
+  void setSelection(ImageData image) {
+    setState(() {
+      image.selected = !image.selected;
+    });
+  }
+
+  void _runFilter(String enteredKeyword) {
+    List<dynamic> results = [];
+    if (enteredKeyword.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = imageBox!.values.toList();
+    } else {
+      results = imageBox!.values.toList()
+          .where((image) =>
+              image.title.toLowerCase().contains(enteredKeyword.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      _foundImages = results;
+    });
   }
 }

@@ -11,13 +11,15 @@ class ImageData extends HiveObject{
   final String imagePath;
 
   @HiveField(1)
-  final String title;
+  String title;
 
   @HiveField(2)
-  final String description;
+  String description;
 
   @HiveField(3)
   final Map<String, String> coordinates;
+
+  bool selected = false;
 
   ImageData({
     required this.imagePath,
