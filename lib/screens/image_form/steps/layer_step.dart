@@ -62,7 +62,7 @@ class _FilterStepState extends State<FilterStep> {
               item.components.length,
               (index) => InkWell(
                 onTap: () {
-                  widget.callback(item.components[index]['value']);
+                  widget.callback(item.components[index]['value'], item.components[index]['shortName']);
                 },
                 child: ListTile(
                   title: Row(
@@ -181,6 +181,7 @@ List<Map<String, dynamic>> nasaLayers = [
     "components": [
       {
         "value": "MODIS_Terra_CorrectedReflectance_TrueColor",
+        "shortName": "Terra - True Color",
         "name": "MODIS True Color - Terra Corrected Reflectance",
         "image": "assets/examples/modis_truecolor.png",
         "description":
@@ -190,7 +191,8 @@ List<Map<String, dynamic>> nasaLayers = [
       },
       {
         "value": "MODIS_Terra_CorrectedReflectance_Bands721",
-        "name": "MODIS Bands 7-2-1 - Terra Corrected Reflectance",
+        "shortName": "Terra - 721",
+        "name": "MODIS Bands 721 - Terra Corrected Reflectance",
         "image": "assets/examples/modis_721.png",
         "description":
             "This combination is most useful for distinguishing burn scars from naturally low vegetation or bare soil and enhancing floods. This combination can also be used to distinguish snow and ice from clouds. Snow and ice are very reflective in the visible part of the spectrum (Band 1), and absorbent in Bands 2 (near infrared) and 7 (short-wave infrared, or SWIR). Thick ice and snow appear vivid sky blue, while small ice crystals in high-level clouds will also appear blueish, and water clouds will appear white.",
@@ -199,7 +201,8 @@ List<Map<String, dynamic>> nasaLayers = [
       },
       {
         "value": "MODIS_Terra_CorrectedReflectance_Bands367",
-        "name": "MODIS Bands 3-6-7 - Terra Corrected Reflectance",
+        "shortName": "Terra - 367",
+        "name": "MODIS Bands 367 - Terra Corrected Reflectance",
         "image": "assets/examples/modis_367.png",
         "description":
             "This combination is used to map snow and ice. Snow and ice are very reflective in the visible part of the spectrum (Band 3), and very absorbent in Bands 6 and 7 (short-wave infrared, or SWIR). This band combination is good for distinguishing liquid water from frozen water, for example, clouds over snow, ice cloud versus water cloud; or floods from dense vegetation. This band combination is only available for MODIS (Terra) because 70% of the band 6 sensors on the MODIS instrument on NASA's Aqua satellite failed shortly after launch.",
@@ -213,6 +216,7 @@ List<Map<String, dynamic>> nasaLayers = [
     "components": [
       {
         "value": "MODIS_Aqua_CorrectedReflectance_TrueColor",
+        "shortName": "Aqua - True Color",
         "name": "MODIS True Color - Aqua Corrected Reflectance",
         "image": "assets/examples/aqua_truecolor.png",
         "description":
@@ -222,6 +226,7 @@ List<Map<String, dynamic>> nasaLayers = [
       },
       {
         "value": "MODIS_Aqua_CorrectedReflectance_Bands721",
+        "shortName": "Aqua - 721",
         "name": "MODIS Bands 7-2-1 - Aqua Corrected Reflectance",
         "image": "assets/examples/aqua_721.png",
         "description":
@@ -236,6 +241,7 @@ List<Map<String, dynamic>> nasaLayers = [
     "components": [
       {
         "value": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+        "shortName": "VIIRS - True Color",
         "name": "VIIRS True Color - SNPP Corrected Reflectance",
         "image": "assets/examples/viirs_truecolor.png",
         "description":
@@ -245,6 +251,7 @@ List<Map<String, dynamic>> nasaLayers = [
       },
       {
         "value": "VIIRS_SNPP_CorrectedReflectance_BandsM11-I2-I1",
+        "shortName": "VIIRS - M11/I2/I1",
         "name": "VIIRS Bands M11-I2-I1 - SNPP Corrected Reflectance",
         "image": "assets/examples/viirs_m11.png",
         "description":
@@ -254,6 +261,7 @@ List<Map<String, dynamic>> nasaLayers = [
       },
       {
         "value": "VIIRS_SNPP_CorrectedReflectance_BandsM3-I3-M11",
+        "shortName": "VIIRS - M3/I3/M11",
         "name": "VIIRS Bands M3-I3-M111 - SNPP Corrected Reflectance",
         "image": "assets/examples/viirs_m3.png",
         "description":
@@ -263,6 +271,7 @@ List<Map<String, dynamic>> nasaLayers = [
       },
       {
         "value": "VIIRS_SNPP_DayNightBand_ENCC",
+        "shortName": "VIIRS - Day Night Band",
         "name": "VIIR SNPP Day/Night Band, ENCC (Nighttime imagery)",
         "image": "assets/examples/viirs_daynight.png",
         "description":
@@ -280,6 +289,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
     "components": [
       {
         "value": "BATHYMETRIC",
+        "shortName": "Bathymetric",
         "name": "Bathymetric",
         "image": "assets/examples/bathymetric.png",
         "description":
@@ -293,6 +303,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
     "components": [
       {
         "value": "NATURAL-COLOR",
+        "shortName": "Natural Color",
         "name": "Natural Color",
         "image": "assets/examples/natural_color.png",
         "description":
@@ -301,6 +312,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "AGRICULTURE",
+        "shortName": "Agriculture",
         "name": "Agriculture",
         "image": "assets/examples/agriculture.png",
         "description":
@@ -309,6 +321,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "GEOLOGY",
+        "shortName": "Geology",
         "name": "Geology",
         "image": "assets/examples/geology.png",
         "description":
@@ -322,6 +335,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
     "components": [
       {
         "value": "NATURAL-COLOR",
+        "shortName": "Natural Color",
         "name": "Natural Color",
         "image": "assets/examples/natural_color.png",
         "description":
@@ -330,6 +344,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "FALSE-COLOR",
+        "shortName": "False Color",
         "name": "False Color",
         "image": "assets/examples/false_color.png",
         "description":
@@ -338,6 +353,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "BATHYMETRIC",
+        "shortName": "Bathymetric",
         "name": "Bathymetric",
         "image": "assets/examples/bathymetric.png",
         "description":
@@ -351,6 +367,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
     "components": [
       {
         "value": "NATURAL-COLOR",
+        "shortName": "Natural Color",
         "name": "Natural Color",
         "image": "assets/examples/natural_color.png",
         "description":
@@ -359,6 +376,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "FALSE-COLOR",
+        "shortName": "False Color",
         "name": "False Color",
         "image": "assets/examples/false_color.png",
         "description":
@@ -367,6 +385,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "NDVI",
+        "shortName": "NDVI",
         "name": "Normalized difference vegetation index",
         "image": "assets/examples/ndvi.png",
         "description":
@@ -375,6 +394,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "FALSE-COLOR-URBAN",
+        "shortName": "False Color Urban",
         "name": "False Color Urban Composite",
         "image": "assets/examples/false_color_urban.png",
         "description":
@@ -383,6 +403,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "SWIR",
+        "shortName": "SWIR",
         "name": "SWIR",
         "image": "assets/examples/swir.png",
         "description":
@@ -391,6 +412,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "BATHYMETRIC",
+        "shortName": "Bathymetric",
         "name": "Bathymetric",
         "image": "assets/examples/bathymetric.png",
         "description":
@@ -399,6 +421,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "GEOLOGY",
+        "shortName": "Geology",
         "name": "Geology",
         "image": "assets/examples/geology.png",
         "description":
@@ -412,6 +435,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
     "components": [
       {
         "value": "FALSE-COLOR",
+        "shortName": "False Color",
         "name": "False Color",
         "image": "assets/examples/false_color.png",
         "description":
@@ -420,6 +444,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "NDVI",
+        "shortName": "NDVI",
         "name": "Normalized difference vegetation index",
         "image": "assets/examples/ndvi.png",
         "description":
@@ -428,6 +453,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "MOISTURE-INDEX",
+        "shortName": "Moisture",
         "name": "Normalized Difference Moisture Index",
         "image": "assets/examples/moisture_index.png",
         "description":
@@ -436,6 +462,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "AGRICULTURE",
+        "shortName": "Agriculture",
         "name": "Agriculture",
         "image": "assets/examples/agriculture.png",
         "description":
@@ -449,6 +476,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
     "components": [
       {
         "value": "FALSE-COLOR-URBAN",
+        "shortName": "False Color Urban",
         "name": "False Color Urban Composite",
         "image": "assets/examples/false_color_urban.png",
         "description":
@@ -457,6 +485,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "MOISTURE-INDEX",
+        "shortName": "Moisture",
         "name": "Normalized Difference Moisture Index",
         "image": "assets/examples/moisture_index.png",
         "description":
@@ -465,6 +494,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "SWIR",
+        "shortName": "SWIR",
         "name": "SWIR",
         "image": "assets/examples/swir.png",
         "description":
@@ -473,6 +503,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "AGRICULTURE",
+        "shortName": "Agrilculture",
         "name": "Agriculture",
         "image": "assets/examples/agriculture.png",
         "description":
@@ -486,6 +517,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
     "components": [
       {
         "value": "FALSE-COLOR-URBAN",
+        "shortName": "False Color Urban",
         "name": "False Color Urban Composite",
         "image": "assets/examples/false_color_urban.png",
         "description":
@@ -494,6 +526,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "SWIR",
+        "shortName": "SWIR",
         "name": "SWIR",
         "image": "assets/examples/swir.png",
         "description":
@@ -502,6 +535,7 @@ List<Map<String, dynamic>> sentinelHubLayers = [
       },
       {
         "value": "GEOLOGY",
+        "shortName": "Geology",
         "name": "Geology",
         "image": "assets/examples/geology.png",
         "description":
@@ -518,6 +552,7 @@ List<Map<String, dynamic>> copernicusLayers = [
     "components": [
       {
         "value": "BATHYMETRIC",
+        "shortName": "Bathymetric",
         "name": "Bathymetric",
         "image": "assets/examples/bathymetric.png",
         "description":
@@ -531,6 +566,7 @@ List<Map<String, dynamic>> copernicusLayers = [
     "components": [
       {
         "value": "NATURAL-COLOR",
+        "shortName": "Natural Color",
         "name": "Natural Color",
         "image": "assets/examples/natural_color.png",
         "description":
@@ -539,6 +575,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "AGRICULTURE",
+        "shortName": "Agriculture",
         "name": "Agriculture",
         "image": "assets/examples/agriculture.png",
         "description":
@@ -547,6 +584,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "GEOLOGY",
+        "shortName": "Geology",
         "name": "Geology",
         "image": "assets/examples/geology.png",
         "description":
@@ -560,6 +598,7 @@ List<Map<String, dynamic>> copernicusLayers = [
     "components": [
       {
         "value": "NATURAL-COLOR",
+        "shortName": "Natural Color",
         "name": "Natural Color",
         "image": "assets/examples/natural_color.png",
         "description":
@@ -568,6 +607,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "FALSE-COLOR",
+        "shortName": "False Color",
         "name": "False Color",
         "image": "assets/examples/false_color.png",
         "description":
@@ -576,6 +616,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "BATHYMETRIC",
+        "shortName": "Bathymetric",
         "name": "Bathymetric",
         "image": "assets/examples/bathymetric.png",
         "description":
@@ -589,6 +630,7 @@ List<Map<String, dynamic>> copernicusLayers = [
     "components": [
       {
         "value": "NATURAL-COLOR",
+        "shortName": "Natural Color",
         "name": "Natural Color",
         "image": "assets/examples/natural_color.png",
         "description":
@@ -597,6 +639,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "FALSE-COLOR",
+        "shortName": "False Color",
         "name": "False Color",
         "image": "assets/examples/false_color.png",
         "description":
@@ -605,14 +648,16 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "NDVI",
+        "shortName": "NDVI",
         "name": "Normalized difference vegetation index",
         "image": "assets/examples/ndvi.png",
         "description":
-            "The well known and widely used NDVI is a simple, but effective index for quantifying green vegetation. It normalizes green leaf scattering in Near Infra-red wavelengths with chlorophyll absorption in red wavelengths.",
+            "The well known and widely used NDVI is a simple, but effective index forß quantifying green vegetation. It normalizes green leaf scattering in Near Infra-red wavelengths with chlorophyll absorption in red wavelengths.",
         "url": "https://custom-scripts.sentinel-hub.com/#sentinel-2",
       },
       {
         "value": "FALSE-COLOR-URBAN",
+        "shortName": "False Color Urban",
         "name": "False Color Urban Composite",
         "image": "assets/examples/false_color_urban.png",
         "description":
@@ -621,6 +666,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "SWIR",
+        "shortName": "SWIR",
         "name": "SWIR",
         "image": "assets/examples/swir.png",
         "description":
@@ -629,6 +675,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "BATHYMETRIC",
+        "shortName": "Bathymetric",
         "name": "Bathymetric",
         "image": "assets/examples/bathymetric.png",
         "description":
@@ -637,6 +684,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "GEOLOGY",
+        "shortName": "Geology",
         "name": "Geology",
         "image": "assets/examples/geology.png",
         "description":
@@ -650,6 +698,7 @@ List<Map<String, dynamic>> copernicusLayers = [
     "components": [
       {
         "value": "FALSE-COLOR",
+        "shortName": "False Color",
         "name": "False Color",
         "image": "assets/examples/false_color.png",
         "description":
@@ -658,6 +707,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "NDVI",
+        "shortName": "NDVI",
         "name": "Normalized difference vegetation index",
         "image": "assets/examples/ndvi.png",
         "description":
@@ -666,6 +716,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "MOISTURE-INDEX",
+        "shortName": "Moisture",
         "name": "Normalized Difference Moisture Index",
         "image": "assets/examples/moisture_index.png",
         "description":
@@ -674,6 +725,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "AGRICULTURE",
+        "shortName": "Agriculture",
         "name": "Agriculture",
         "image": "assets/examples/agriculture.png",
         "description":
@@ -687,6 +739,7 @@ List<Map<String, dynamic>> copernicusLayers = [
     "components": [
       {
         "value": "FALSE-COLOR-URBAN",
+        "shortName": "False Color Urban",
         "name": "False Color Urban Composite",
         "image": "assets/examples/false_color_urban.png",
         "description":
@@ -695,6 +748,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "MOISTURE-INDEX",
+        "shortName": "Moisture",
         "name": "Normalized Difference Moisture Index",
         "image": "assets/examples/moisture_index.png",
         "description":
@@ -703,6 +757,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "SWIR",
+        "shortName": "SWIR",
         "name": "SWIR",
         "image": "assets/examples/swir.png",
         "description":
@@ -711,6 +766,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "AGRICULTURE",
+        "shortName": "Agrilculture",
         "name": "Agriculture",
         "image": "assets/examples/agriculture.png",
         "description":
@@ -724,6 +780,7 @@ List<Map<String, dynamic>> copernicusLayers = [
     "components": [
       {
         "value": "FALSE-COLOR-URBAN",
+        "shortName": "False Color Urban",
         "name": "False Color Urban Composite",
         "image": "assets/examples/false_color_urban.png",
         "description":
@@ -732,6 +789,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "SWIR",
+        "shortName": "SWIR",
         "name": "SWIR",
         "image": "assets/examples/swir.png",
         "description":
@@ -740,6 +798,7 @@ List<Map<String, dynamic>> copernicusLayers = [
       },
       {
         "value": "GEOLOGY",
+        "shortName": "Geology",
         "name": "Geology",
         "image": "assets/examples/geology.png",
         "description":

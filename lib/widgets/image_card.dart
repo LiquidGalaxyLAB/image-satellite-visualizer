@@ -46,7 +46,7 @@ class _ImageCardState extends State<ImageCard> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
-              flex: 7,
+              flex: 9,
               child: Container(
                 child: Image.file(
                   File(widget.image.imagePath),
@@ -57,29 +57,75 @@ class _ImageCardState extends State<ImageCard> {
             Expanded(
               flex: 2,
               child: Container(
-                padding: EdgeInsets.all(screenSize.width * 0.01),
-                child: Text(
-                  widget.image.title,
-                  style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: screenSize.width * 0.015,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
+                padding: EdgeInsets.only(
+                  left: screenSize.width * 0.01,
+                  right: screenSize.width * 0.01,
+                  top: screenSize.width * 0.01,
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      widget.image.title,
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: screenSize.width * 0.015,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                    Spacer(),
+                    Text(
+                      '${widget.image.date.year}/${widget.image.date.month}/${widget.image.date.day}',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ],
                 ),
               ),
             ),
             Expanded(
               flex: 2,
               child: Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: screenSize.width * 0.01),
+                padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.01),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: screenSize.width * 0.01),
+                      child: Chip(
+                        label: Text(widget.image.api),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: screenSize.width * 0.01),
+                      child: Chip(
+                        label: Text(
+                          widget.image.layer,
+                          overflow: TextOverflow.fade,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: screenSize.width * 0.01,
+                  right: screenSize.width * 0.01,
+                  top: screenSize.width * 0.008,
+                ),
                 child: Text(
                   widget.image.description,
                   style: TextStyle(fontWeight: FontWeight.w300),
                   overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
+                  maxLines: 4,
                 ),
               ),
             ),
@@ -157,7 +203,8 @@ class _ImageCardState extends State<ImageCard> {
                                           ),
                                           child: TextField(
                                             maxLines: 8,
-                                            controller: descriptionEditingController,
+                                            controller:
+                                                descriptionEditingController,
                                             decoration: new InputDecoration(
                                               hintText: 'Description',
                                               labelText: 'Description',
@@ -184,8 +231,10 @@ class _ImageCardState extends State<ImageCard> {
                                     ),
                                     onPressed: () {
                                       setState(() {
-                                        widget.image.title = titleEditingController.text;
-                                        widget.image.description = descriptionEditingController.text;
+                                        widget.image.title =
+                                            titleEditingController.text;
+                                        widget.image.description =
+                                            descriptionEditingController.text;
                                       });
                                       Navigator.pop(context);
                                     },

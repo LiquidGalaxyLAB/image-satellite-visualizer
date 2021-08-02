@@ -39,6 +39,7 @@ class _ImageFormState extends State<ImageForm> {
   };
   DateTime date = DateTime.now();
   String layer = ""; //TODO: Add map for base and ovelay layers
+  String layerShortName = "";
   String? imagePath;
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -119,7 +120,7 @@ class _ImageFormState extends State<ImageForm> {
       coordinates: coordinatesMap,
       api: selectedApi,
       date: date,
-      layer: layer,
+      layer: layerShortName,
     );
     print('result: ' + imageData.toString());
     imageBox?.add(imageData);
@@ -305,9 +306,10 @@ class _ImageFormState extends State<ImageForm> {
     });
   }
 
-  void setLayer(String incomingLayer) {
+  void setLayer(String incomingLayer, String incomingShortName) {
     setState(() {
       layer = incomingLayer;
+      layerShortName = incomingShortName;
     });
   }
 
