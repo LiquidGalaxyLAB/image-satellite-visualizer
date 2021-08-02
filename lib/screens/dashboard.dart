@@ -18,11 +18,10 @@ class _DashboardState extends State<Dashboard> {
   Box? imageBox;
   Box? settingsBox;
 
-  List<dynamic> _foundImages = [];
-
   TextEditingController ipTextController = TextEditingController();
   TextEditingController usernameTextController = TextEditingController();
   TextEditingController passwordTextController = TextEditingController();
+  String searchTextController = "";
 
   List<Widget> imageCards(bool demo, List images) {
     List<Widget> list = [];
@@ -42,7 +41,6 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     imageBox = Hive.box('imageBox');
     settingsBox = Hive.box('liquidGalaxySettings');
-    _foundImages = imageBox!.values.toList();
   }
 
   @override
@@ -171,7 +169,9 @@ class _DashboardState extends State<Dashboard> {
                       screenSize.height * 0.01,
                     ),
                     child: TextField(
-                      onChanged: (value) => _runFilter(value),
+                      onChanged: (val) => setState(() {
+                        searchTextController = val;
+                      }),
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search),
                         labelText: 'Search',
@@ -185,7 +185,7 @@ class _DashboardState extends State<Dashboard> {
                     return Expanded(
                       flex: 8,
                       child: GridView.count(
-                        children: imageCards(false, _foundImages),
+                        children: imageCards(false, _runFilter(searchTextController)),
                         childAspectRatio: 0.8,
                         crossAxisSpacing: screenSize.width * 0.03,
                         crossAxisCount: 3,
@@ -229,7 +229,7 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  void _runFilter(String enteredKeyword) {
+  List<dynamic> _runFilter(String enteredKeyword) {
     List<dynamic> results = [];
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
@@ -242,9 +242,6 @@ class _DashboardState extends State<Dashboard> {
       // we use the toLowerCase() method to make it case-insensitive
     }
 
-    // Refresh the UI
-    setState(() {
-      _foundImages = results;
-    });
+    return results;
   }
 }

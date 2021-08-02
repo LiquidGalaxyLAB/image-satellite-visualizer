@@ -19,6 +19,15 @@ class ImageData extends HiveObject{
   @HiveField(3)
   final Map<String, String> coordinates;
 
+  @HiveField(4)
+  final DateTime date;
+
+  @HiveField(5)
+  final String api;
+
+  @HiveField(6)
+  final String layer;
+
   bool selected = false;
 
   ImageData({
@@ -26,6 +35,9 @@ class ImageData extends HiveObject{
     required this.title,
     required this.description,
     required this.coordinates,
+    required this.date,
+    required this.api,
+    required this.layer,
   });
 
   Future<File> generateKml() async {

@@ -21,13 +21,16 @@ class ImageDataAdapter extends TypeAdapter<ImageData> {
       title: fields[1] as String,
       description: fields[2] as String,
       coordinates: (fields[3] as Map).cast<String, String>(),
+      date: fields[4] as DateTime,
+      api: fields[5] as String,
+      layer: fields[6] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ImageData obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.imagePath)
       ..writeByte(1)
@@ -35,7 +38,13 @@ class ImageDataAdapter extends TypeAdapter<ImageData> {
       ..writeByte(2)
       ..write(obj.description)
       ..writeByte(3)
-      ..write(obj.coordinates);
+      ..write(obj.coordinates)
+      ..writeByte(4)
+      ..write(obj.date)
+      ..writeByte(5)
+      ..write(obj.api)
+      ..writeByte(6)
+      ..write(obj.layer);
   }
 
   @override

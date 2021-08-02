@@ -117,6 +117,9 @@ class _ImageFormState extends State<ImageForm> {
       title: nameController.text,
       description: descriptionController.text,
       coordinates: coordinatesMap,
+      api: selectedApi,
+      date: date,
+      layer: layer,
     );
     print('result: ' + imageData.toString());
     imageBox?.add(imageData);
