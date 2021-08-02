@@ -272,6 +272,8 @@ class _ImageFormState extends State<ImageForm> {
     if (_currentStep > 0) {
       if (_currentStep == 3) imagePath = null;
       setState(() => _currentStep -= 1);
+    } else {
+      Navigator.of(context).pop();
     }
   }
 
