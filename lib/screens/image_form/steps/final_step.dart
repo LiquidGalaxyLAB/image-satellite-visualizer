@@ -33,7 +33,7 @@ class FinalStep extends StatelessWidget {
                   width: screenSize.width * 0.4,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
                         'Image',
@@ -47,23 +47,26 @@ class FinalStep extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.w300),
                         ),
                       ),
-                      Container(
-                        height: screenSize.height * 0.35,
-                        width: screenSize.width * 0.35,
-                        child: Image.file(
-                          File(image!),
-                          fit: BoxFit.contain,
+                      Padding(
+                        padding: EdgeInsets.only(top: screenSize.height * 0.05),
+                        child: Container(
+                          height: screenSize.height * 0.35,
+                          width: screenSize.width * 0.35,
+                          child: Image.file(
+                            File(image!),
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       )
                     ],
                   ),
                 ),
                 Container(
-                  height: screenSize.height * 0.45,
+                  height: screenSize.height * 0.5,
                   width: screenSize.width * 0.4,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
                         'Information',
@@ -78,9 +81,9 @@ class FinalStep extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: screenSize.width * 0.008,
-                            vertical: screenSize.height * 0.02),
+                        padding: EdgeInsets.only(
+                            left: screenSize.width * 0.008,
+                            top: screenSize.height * 0.05),
                         child: TextField(
                           controller: nameController,
                           decoration: new InputDecoration(
@@ -96,9 +99,10 @@ class FinalStep extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: screenSize.width * 0.008,
-                            vertical: screenSize.height * 0.02),
+                        padding: EdgeInsets.only(
+                          left: screenSize.width * 0.008,
+                          top: screenSize.height * 0.02,
+                        ),
                         child: TextField(
                           controller: descriptionController,
                           maxLines: 8,
