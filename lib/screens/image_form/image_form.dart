@@ -37,6 +37,7 @@ class _ImageFormState extends State<ImageForm> {
     "lat2Controller": TextEditingController(),
     "lon2Controller": TextEditingController(),
   };
+  late double cloudCoverage;
   DateTime date = DateTime.now();
   String layer = ""; //TODO: Add map for base and ovelay layers
   String layerShortName = "";
@@ -68,6 +69,7 @@ class _ImageFormState extends State<ImageForm> {
       time: '2020-03-30',
       bbox: bbox,
       resolution: resolution,
+      cloudCoverage: cloudCoverage,
     );
 
     String url;
@@ -169,6 +171,7 @@ class _ImageFormState extends State<ImageForm> {
                 resolution: resolution,
                 coordinateCallback: setCoordinates,
                 resolutionCallback: setResolution,
+                cloudCoverageCallback: setCloudCoverage,
                 dateCallback: setDate,
               ),
               isActive: _currentStep >= 0,
@@ -312,6 +315,12 @@ class _ImageFormState extends State<ImageForm> {
     setState(() {
       layer = incomingLayer;
       layerShortName = incomingShortName;
+    });
+  }
+
+  void setCloudCoverage(double incomingCloudCoverage) {
+    setState(() {
+      cloudCoverage = incomingCloudCoverage;
     });
   }
 

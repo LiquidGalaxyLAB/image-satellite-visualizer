@@ -8,13 +8,15 @@ import 'package:image_satellite_visualizer/models/resolution.dart';
 class Maps extends StatefulWidget {
   final coordiantesCallback;
   final resolutionCallback;
+  final cloudCoverageCallback;
   final Resolution resolution;
-  const Maps(
-      {required this.coordiantesCallback,
-      required this.resolutionCallback,
-      required this.resolution,
-      Key? key})
-      : super(key: key);
+  const Maps({
+    required this.coordiantesCallback,
+    required this.resolutionCallback,
+    required this.resolution,
+    required this.cloudCoverageCallback,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _MapsState createState() => _MapsState();
@@ -34,6 +36,8 @@ class _MapsState extends State<Maps> {
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   Map<PolygonId, Polygon> polygons = <PolygonId, Polygon>{};
   int _markerIdCounter = 1;
+
+  double cloudCoverage = 0;
 
   List<bool> isSelected = [false, true];
 
@@ -358,6 +362,51 @@ class _MapsState extends State<Maps> {
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          padding: const EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                            color: sizeCheck()
+                                ? Colors.grey[300]
+                                : Colors.red[300],
+                            // color: Colors.grey[300],
+                            border: Border.all(
+                              color: Colors.transparent,
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Cloud Coverage: ${this.cloudCoverage.toString()}',
+                                style: TextStyle(
+                                    fontSize: screenSize.height * 0.03),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 20.0),
+                                  child: Slider(
+                                    value: cloudCoverage,
+                                    min: 0,
+                                    max: 100,
+                                    onChanged: (double value) {
+                                      setState(() {
+                                        cloudCoverage = double.parse(
+                                            value.toStringAsFixed(1));
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       sizeCheck()
                           ? Container()
                           : Text(
@@ -385,6 +434,7 @@ class _MapsState extends State<Maps> {
                                 child: Text('CONTINUE'),
                                 onPressed: () {
                                   this.widget.coordiantesCallback(markers);
+                                  this.widget.cloudCoverageCallback(cloudCoverage);
                                   Navigator.pop(context);
                                 },
                               ),

@@ -6,6 +6,7 @@ import 'package:image_satellite_visualizer/screens/image_form/maps.dart';
 class DataStep extends StatelessWidget {
   final coordinateCallback;
   final resolutionCallback;
+  final cloudCoverageCallback;
   final dateCallback;
   final Map<String, TextEditingController> textControllers;
   final DateTime date;
@@ -18,6 +19,7 @@ class DataStep extends StatelessWidget {
     required this.dateCallback,
     required this.resolutionCallback,
     required this.resolution,
+    required this.cloudCoverageCallback,
     Key? key,
   }) : super(key: key);
 
@@ -149,6 +151,7 @@ class DataStep extends StatelessWidget {
                         builder: (context) => Maps(
                           coordiantesCallback: this.setLocation,
                           resolutionCallback: this.setResolution,
+                          cloudCoverageCallback: this.setCloudCoverage,
                           resolution: resolution,
                         ),
                       ),
@@ -206,6 +209,10 @@ class DataStep extends StatelessWidget {
 
   void setResolution(Resolution resolution) {
     resolutionCallback(resolution);
+  }
+
+  void setCloudCoverage(double cloudCoverage) {
+    cloudCoverageCallback(cloudCoverage);
   }
 
   Future<void> _selectDate(BuildContext context) async {
