@@ -41,6 +41,8 @@ class _ImageFormState extends State<ImageForm> {
   DateTime date = DateTime.now();
   String layer = ""; //TODO: Add map for base and ovelay layers
   String layerShortName = "";
+  String layerDescription = "";
+  List<Map<String, String>> colors = [{}];
   String? imagePath;
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -123,6 +125,8 @@ class _ImageFormState extends State<ImageForm> {
       api: selectedApi,
       date: date,
       layer: layerShortName,
+      layerDescription: layerDescription,
+      colors: colors,
     );
     print('result: ' + imageData.toString());
     imageBox?.add(imageData);
@@ -311,10 +315,17 @@ class _ImageFormState extends State<ImageForm> {
     });
   }
 
-  void setLayer(String incomingLayer, String incomingShortName) {
+  void setLayer(
+    String incomingLayer,
+    String incomingShortName,
+    String incomingLayerDescription,
+    List<Map<String, String>> incomingColors,
+  ) {
     setState(() {
       layer = incomingLayer;
       layerShortName = incomingShortName;
+      layerDescription = incomingLayerDescription;
+      colors = incomingColors;
     });
   }
 

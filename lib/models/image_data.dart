@@ -28,6 +28,12 @@ class ImageData extends HiveObject{
   @HiveField(6)
   final String layer;
 
+  @HiveField(7)
+  final String layerDescription;
+
+  @HiveField(8)
+  final List<Map<String, String>> colors;
+
   bool selected = false;
 
   ImageData({
@@ -38,6 +44,8 @@ class ImageData extends HiveObject{
     required this.date,
     required this.api,
     required this.layer,
+    required this.layerDescription,
+    required this.colors,
   });
 
   Future<File> generateKml() async {
