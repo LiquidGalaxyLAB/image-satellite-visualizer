@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:image_satellite_visualizer/screens/image_form/image_form.dart';
+import 'package:image_satellite_visualizer/screens/splash_screen.dart';
 import 'package:image_satellite_visualizer/widgets/image_card.dart';
 import 'package:image_satellite_visualizer/models/image_data.dart';
-import 'package:image_satellite_visualizer/widgets/image_card_demo.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key, required this.title}) : super(key: key);
@@ -23,17 +27,50 @@ class _DashboardState extends State<Dashboard> {
   TextEditingController passwordTextController = TextEditingController();
   String searchTextController = "";
 
-  List<Widget> imageCards(bool demo, List images) {
+  List<ImageData> demoImages = [];
+
+  List<Widget> imageCards(List images) {
     List<Widget> list = [];
+
     for (ImageData image in images) {
       list.add(
         Container(
           padding: const EdgeInsets.all(8.0),
-          child: demo ? ImageCardDemo(image: image) : ImageCard(image: image, callback: setSelection),
+          child: ImageCard(image: image, callback: setSelection),
         ),
       );
     }
     return list;
+  }
+
+  void loadJsonData() async {
+    List<ImageData> images = [];
+    var jsonText = await rootBundle.loadString('assets/json/demos.json');
+
+    json.decode(jsonText).forEach((element) {
+      List<Map<String, String>> colors = [];
+      element['colors']
+          .forEach((color) => colors.add(Map<String, String>.from(color)));
+
+      images.add(
+        ImageData(
+          imagePath: element['imagePath'],
+          title: element['title'],
+          description: element['description'],
+          coordinates: Map<String, String>.from(element['coordinates']),
+          date: DateTime.parse(element['date']),
+          layer: element['layer'],
+          layerDescription: element['layerDescription'],
+          colors: List<Map<String, String>>.from(colors),
+          api: element['api'],
+          demo: true,
+        ),
+      );
+    });
+
+    setState(() {
+      demoImages = images;
+    });
   }
 
   @override
@@ -41,6 +78,7 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     imageBox = Hive.box('imageBox');
     settingsBox = Hive.box('liquidGalaxySettings');
+    loadJsonData();
   }
 
   @override
@@ -63,12 +101,27 @@ class _DashboardState extends State<Dashboard> {
             Padding(
               padding: EdgeInsets.only(left: screenSize.width * 0.01),
               child: TextButton(
-                onPressed: () => print('DEMO'),
+                onPressed: () => loadJsonData(),
                 child: Text(
                   'DEMO',
                   style: TextStyle(
                     color: Colors.white,
                   ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: screenSize.width * 0.01),
+              child: TextButton(
+                child: Text(
+                  'ABOUT',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SplashScreen(false)),
                 ),
               ),
             ),
@@ -133,15 +186,24 @@ class _DashboardState extends State<Dashboard> {
                         ),
                         actions: [
                           TextButton(
-                            child: Text("CANCEL", style: TextStyle(color: Colors.grey[600]),),
+                            child: Text(
+                              "CANCEL",
+                              style: TextStyle(color: Colors.grey[600]),
+                            ),
                             onPressed: () => Navigator.pop(context),
                           ),
                           TextButton(
-                            child: Text("SET", style: TextStyle(color: Theme.of(context).accentColor),),
+                            child: Text(
+                              "SET",
+                              style: TextStyle(
+                                  color: Theme.of(context).accentColor),
+                            ),
                             onPressed: () {
                               settingsBox?.put('ip', ipTextController.text);
-                              settingsBox?.put('username', usernameTextController.text);
-                              settingsBox?.put('password', passwordTextController.text);
+                              settingsBox?.put(
+                                  'username', usernameTextController.text);
+                              settingsBox?.put(
+                                  'password', passwordTextController.text);
                               Navigator.pop(context);
                             },
                           ),
@@ -150,7 +212,7 @@ class _DashboardState extends State<Dashboard> {
                     },
                   );
                 },
-                child: Icon(Icons.wifi, color: Colors.white),
+                child: Icon(Icons.settings, color: Colors.white),
               ),
             ),
           ],
@@ -185,29 +247,34 @@ class _DashboardState extends State<Dashboard> {
                     return Expanded(
                       flex: 8,
                       child: GridView.count(
-                        children: imageCards(false, _runFilter(searchTextController)),
+                        children: imageCards(_runFilter(searchTextController)),
                         childAspectRatio: 0.8,
                         crossAxisSpacing: screenSize.width * 0.03,
                         crossAxisCount: 3,
                         // padding: EdgeInsetsDirectional.all(screenSize.width * 0.07),
                         padding: EdgeInsetsDirectional.fromSTEB(
-                            screenSize.width * 0.07,
-                            screenSize.height * 0.01,
-                            screenSize.width * 0.07,
-                            screenSize.height * 0.01),
+                          screenSize.width * 0.07,
+                          screenSize.height * 0.01,
+                          screenSize.width * 0.07,
+                          screenSize.height * 0.01,
+                        ),
                       ),
                     );
                   },
                 ),
               ],
             ),
-            ValueListenableBuilder(
-              valueListenable: Hive.box('imageBox').listenable(),
-              builder: (context, box, widget) {
-                return ListView(
-                  children: imageCards(true, imageBox!.values.toList()),
-                );
-              },
+            GridView.count(
+              children: imageCards(demoImages),
+              childAspectRatio: 0.8,
+              crossAxisSpacing: screenSize.width * 0.03,
+              crossAxisCount: 3,
+              // padding: EdgeInsetsDirectional.all(screenSize.width * 0.07),
+              padding: EdgeInsetsDirectional.fromSTEB(
+                  screenSize.width * 0.07,
+                  screenSize.height * 0.01,
+                  screenSize.width * 0.07,
+                  screenSize.height * 0.01),
             ),
           ],
         ),
@@ -235,7 +302,8 @@ class _DashboardState extends State<Dashboard> {
       // if the search field is empty or only contains white-space, we'll display all users
       results = imageBox!.values.toList();
     } else {
-      results = imageBox!.values.toList()
+      results = imageBox!.values
+          .toList()
           .where((image) =>
               image.title.toLowerCase().contains(enteredKeyword.toLowerCase()))
           .toList();

@@ -40,10 +40,15 @@ class ImageInfo extends StatelessWidget {
                   child: Container(
                     height: screenSize.height * 0.35,
                     width: screenSize.width * 0.35,
-                    child: Image.file(
-                      File(image.imagePath),
-                      fit: BoxFit.cover,
-                    ),
+                    child: image.demo
+                        ? Image.asset(
+                            image.imagePath,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.file(
+                            File(image.imagePath),
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
                 Padding(

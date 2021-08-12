@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
-  part 'image_data.g.dart';
+part 'image_data.g.dart';
 
 @HiveType(typeId: 0)
-class ImageData extends HiveObject{
+class ImageData extends HiveObject {
   @HiveField(0)
   final String imagePath;
 
@@ -34,6 +34,9 @@ class ImageData extends HiveObject{
   @HiveField(8)
   final List<Map<String, String>> colors;
 
+  @HiveField(9)
+  final bool demo;
+
   bool selected = false;
 
   ImageData({
@@ -46,12 +49,13 @@ class ImageData extends HiveObject{
     required this.layer,
     required this.layerDescription,
     required this.colors,
+    required this.demo,
   });
 
   Future<File> generateKml() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
-    File file = new File(path.join(documentDirectory.path,
-        '${this.getFileName()}.kml'));
+    File file = new File(
+        path.join(documentDirectory.path, '${this.getFileName()}.kml'));
     String content = '''
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -77,11 +81,17 @@ class ImageData extends HiveObject{
   }
 
   String getFileName() {
-    RegExp regex = RegExp("/data/user/0/com.example.image_satellite_visualizer/app_flutter/(.*).jpeg");
-    String path = this.imagePath;
-    var fileName = regex.firstMatch(path)?.group(1);
+    RegExp regexCreated = RegExp(
+        "/data/user/0/com.example.image_satellite_visualizer/app_flutter/(.*).jpeg");
+    RegExp regexDemo = RegExp("assets/demos/(.*).jpeg");
+
+    var fileName = this.demo
+        ? regexDemo.firstMatch(this.imagePath)?.group(1)
+        : regexCreated.firstMatch(this.imagePath)?.group(1);
+
     return fileName!;
   }
 
-  toString() => "imagePath: ${this.imagePath}\n title: ${this.title}\n description: ${this.description}\n coordinates: ${this.coordinates}";
+  toString() =>
+      "imagePath: ${this.imagePath}\n title: ${this.title}\n description: ${this.description}\n coordinates: ${this.coordinates}";
 }

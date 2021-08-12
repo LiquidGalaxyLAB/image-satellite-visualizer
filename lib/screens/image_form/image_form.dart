@@ -127,6 +127,7 @@ class _ImageFormState extends State<ImageForm> {
       layer: layerShortName,
       layerDescription: layerDescription,
       colors: colors,
+      demo: false,
     );
     print('result: ' + imageData.toString());
     imageBox?.add(imageData);

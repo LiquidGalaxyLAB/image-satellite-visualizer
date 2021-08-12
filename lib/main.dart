@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.blueGrey[700],
         accentColor: Colors.tealAccent[700],
       ),
-      home: SplashScreen(),
+      home: SplashScreen(true),
     );
   }
 }

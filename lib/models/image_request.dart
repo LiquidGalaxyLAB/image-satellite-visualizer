@@ -67,10 +67,10 @@ class ImageRequest {
   }
 
   String getSentinelHubRequestUrl() {
-    return "https://services.sentinel-hub.com/ogc/wms/b54cb4a9-dbfc-4953-a1bf-12d6819d756b?REQUEST=GetMap&CRS=EPSG:4326&BBOX=${this.getBoundaries()}&LAYERS=${this.layers.join(',')}&WIDTH=${this.getResolutions()["width"]}&HEIGHT=${this.getResolutions()["height"]}&FORMAT=image/jpeg&TIME=2016-03-29/${this.time}${this.getCloudCoverage()}";
+    return "https://services.sentinel-hub.com/ogc/wms/3566872f-a627-4bd0-b410-c06dc82fe1ff?REQUEST=GetMap&CRS=EPSG:4326&BBOX=${this.getBoundaries()}&LAYERS=${this.layers.join(',')}&WIDTH=${this.getResolutions()["width"]}&HEIGHT=${this.getResolutions()["height"]}&FORMAT=image/jpeg&TIME=2016-03-29/${this.time}${this.getCloudCoverage()}";
   }
 
   String getCopernicusRequestUrl() {
-    return "https://scihub.copernicus.eu/dhus/search?q=footprint:%22Intersects(POLYGON((${this.getBoundaries()})))%22&URL=https://services.sentinel-hub.com/ogc/wms/b54cb4a9-dbfc-4953-a1bf-12d6819d756b?REQUEST=GetMap&CRS=EPSG:4326&BBOX=${this.getBoundaries()}&LAYERS=${this.layers.join(',')}&WIDTH=${this.getResolutions()["width"]}&HEIGHT=${this.getResolutions()["height"]}&FORMAT=image/jpeg&TIME=2016-03-29/${this.time}${this.getCloudCoverage()}";
+    return "https://scihub.copernicus.eu/dhus/search?q=footprint:%22Intersects(POLYGON((${this.getBoundaries()})))%22&URL=https://services.sentinel-hub.com/ogc/wms/3566872f-a627-4bd0-b410-c06dc82fe1ff?REQUEST=GetMap&CRS=EPSG:4326&BBOX=${this.getBoundaries()}&LAYERS=${this.layers.join(',')}&WIDTH=${this.getResolutions()["width"]}&HEIGHT=${this.getResolutions()["height"]}&FORMAT=image/jpeg&TIME=2016-03-29/${this.time}${this.getCloudCoverage()}";
   }
 }

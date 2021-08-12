@@ -1,0 +1,255 @@
+[
+  {
+    "imagePath": "assets/demos/fortaleza-96784.jpeg",
+    "title": "Fortaleza - Brazil",
+    "description": "Fortaleza is the capital of the state of Ceará, in Northeast Brazil. The city is known for its beaches, with red cliffs, palm trees, dunes and lagoons. The city's folk traditions can be seen in dance performances at the Theatro José de Alencar, an art nouveau-style building inaugurated in 1910. Another architectural highlight is the Metropolitan Cathedral, in neo-Gothic style",
+    "coordinates": {
+      "minLat": "-5.872879",
+      "minLon": "-39.888268",
+      "maxLat": "-2.476559",
+      "maxLon": "-36.037731"
+    },
+    "date": "2021-07-28",
+    "api": "NASA",
+    "layer": "Terra - 721",
+    "layerDescription": "This combination is most useful for distinguishing burn scars from naturally low vegetation or bare soil and enhancing floods. This combination can also be used to distinguish snow and ice from clouds. Snow and ice are very reflective in the visible part of the spectrum (Band 1), and absorbent in Bands 2 (near infrared) and 7 (short-wave infrared, or SWIR). Thick ice and snow appear vivid sky blue, while small ice crystals in high-level clouds will also appear blueish, and water clouds will appear white.",
+    "colors": [
+      {
+        "value": "green",
+        "description": "Vegetation and bare ground"
+      },
+      {
+        "value": "red",
+        "description": "Burned areas"
+      },
+      {
+        "value": "blue",
+        "description": "Ocean"
+      }
+    ]
+  },
+  {
+    "imagePath": "assets/demos/toronto-33891.jpeg",
+    "title": "Toronto - Canada",
+    "description": "Toronto, the provincial capital of Ontario, is a large Canadian city located along the northwestern shore of Lake Ontario. It is a dynamic metropolis with a center of imposing skyscrapers, all overshadowed by the famous CN Tower. Toronto also has many green spaces, including from the oval Queen's Park to the 400-acre High Park, as well as trails, sports facilities and a zoo.",
+    "coordinates": {
+      "minLat": "42.317905",
+      "minLon": "-83.048401",
+      "maxLat": "45.671825",
+      "maxLon": "-78.135281"
+    },
+    "date": "2021-02-04",
+    "api": "NASA",
+    "layer": "Terra - 367",
+    "layerDescription": "This combination is used to map snow and ice. Snow and ice are very reflective in the visible part of the spectrum (Band 3), and very absorbent in Bands 6 and 7 (short-wave infrared, or SWIR). This band combination is good for distinguishing liquid water from frozen water, for example, clouds over snow, ice cloud versus water cloud; or floods from dense vegetation. This band combination is only available for MODIS (Terra) because 70% of the band 6 sensors on the MODIS instrument on NASA's Aqua satellite failed shortly after launch.",
+    "colors":[
+      {
+        "value": "red",
+        "description": "Snow, ice and sediments"
+      },
+      {
+        "value": "green",
+        "description": "Vegeation"
+      },
+      {
+        "value": "white",
+        "description": "Ocean"
+      }
+    ]
+  },
+  {
+    "imagePath": "assets/demos/new_york-78110.jpeg",
+    "title": "New York - United States",
+    "description": "New York City comprises 5 districts located at the intersection of the Hudson River and the Atlantic Ocean. In the center of the city is Manhattan, a densely populated district that ranks among the world's top commercial, financial and cultural centers. Among its emblematic points, stand out skyscrapers, such as the Empire State Building, and the huge Central Park. The Broadway theater sits amidst the neon lights of Times Square.",
+    "coordinates": {
+      "minLat": "39.683676",
+      "minLon": "-74.791231",
+      "maxLat": "41.489611",
+      "maxLon": "-71.615953"
+    },
+    "date": "2021-02-04",
+    "api": "NASA",
+    "layer": "VIIRS - Day Night Band",
+    "layerDescription": "The VIIRS Nighttime Imagery (Day/Night Band, Enhanced Near Constant Contrast) shows the Earth’s surface and atmosphere using a sensor designed to capture low-light emission sources, under varying illumination conditions. It is displayed as a grayscale image. Sources of illumination include both natural and anthropogenic sources of light emissions. Lunar reflection can be used to highlight the location and features of clouds and other terrestrial features such as sea ice and snow cover when there is partial to full moon conditions. When there is no moonlight, natural and anthropogenic night time light emissions are highlighted such as city lights, lightning, upper-atmospheric gravity waves, auroras, fires, gas flares, and fishing fleets. This layer is useful for displaying cities and highways at night, the tracking of shipping and fishing fleets, as well as fires and the burning of waste natural gas (gas flares) from on and offshore oil/gas production sites.",
+    "colors": [
+      {
+        "value": "grey",
+        "description": "Radiance units"
+      }
+    ]
+  },
+  {
+    "imagePath": "assets/demos/gilbratar-00127.jpeg",
+    "title": "Gilbratar",
+    "description": "Gibraltar is a British headland and overseas territory on the southern coast of Spain. The site is dominated by the Rock of Gibraltar, in limestone and with an altitude of 426 m. First colonized by the Moors in the Middle Ages and then ruled by the Spaniards, the territory was ceded to the British in 1713. In the layers of fortifications, there are remains of a 14th century Moorish castle and the Great Siege Tunnels, excavated in the 18th century and expanded in World War II.",
+    "coordinates": {
+      "minLat": "35.11675832595297",
+      "minLon": "-7.039207108318806",
+      "maxLat": "36.87652191233517",
+      "maxLon": "-3.941579908132553"
+    },
+    "date": "2020-03-30",
+    "api": "Sentinel Hub",
+    "layer": "Agriculture",
+    "layerDescription": "This composite, often called the Agriculture RGB composite, uses bands SWIR-1 (B11), near-infrared (B08) and blue (B02). It’s mostly used to monitor crop health, as both short-wave and near infrared bands are particularly good at highlighting dense vegetation, which appears dark green in the composite. SWIR measurements can help scientists estimate how much water is present in plants and soil, as water reflects SWIR light. Shortwave-infrared bands are also useful for distinguishing between snow, and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage.",
+    "colors": [
+      {
+        "value": "green",
+        "description": "Dense vegetation"
+      },
+      {
+        "value": "red",
+        "description": "Fire damage"
+      },
+      {
+        "value": "blue",
+        "description": "Ocean"
+      }
+    ]
+  },
+  {
+    "imagePath": "assets/demos/rio_de_janeiro-99078.jpeg",
+    "title": "Rio de Janeiro - Brazil",
+    "description": "Rio de Janeiro is a large Brazilian city by the sea, famous for the beaches of Copacabana and Ipanema, the 38-meter tall statue of Christ the Redeemer atop Corcovado, and the Sugarloaf Mountain, a granite peak with cable cars to its summit. The city is also known for its large favelas. The exciting Carnival, with floats, extravagant costumes and samba dancers, is considered the biggest in the world.",
+    "coordinates": {
+      "minLat": "-23.492091440203716",
+      "minLon": "-44.08880967646837",
+      "maxLat": "-22.314436085568264",
+      "maxLon": "-42.11127195507288"
+    },
+    "date": "2020-03-30",
+    "api": "Sentinel HUb",
+    "layer": "False Color Urban",
+    "layerDescription": "This composite is used to visualize urbanized areas more clearly. Vegetation is visible in shades of green, while urbanized areas are represented by white, grey, or purple. Soils, sand, and minerals are shown in a variety of colors. Snow and ice appear as dark blue, and water as black or blue. Flooded areas are very dark blue and almost black. The composite is useful for detecting wildfires and calderas of volcanoes, as they are displayed in shades of red and yellow.",
+    "colors": [
+      {
+        "value": "green",
+        "description": "Vegetation"
+      },
+      {
+        "value": "grey",
+        "description": "Urbanized areas"
+      },
+      {
+        "value": "blue",
+        "description": "Flooded areas, snow and ice"
+      }
+    ]
+  },
+  {
+    "imagePath": "assets/demos/singapore-99120.jpeg",
+    "title": "Singapore",
+    "description": "Singapore, an island city-state to the south of Malaysia, is a global financial center with a tropical climate and multicultural population. Its colonial center revolves around the Padang, an 1830s cricket field that is today flanked by large buildings such as the City Hall, with 18 Corinthian columns. In Chinatown, which appeared around 1820, is the Buddha Tooth Relic Temple, in red and gold, which supposedly houses one of the Buddha's teeth.",
+    "coordinates": {
+      "minLat": "0.5652657092806476",
+      "minLon": "102.91873130947351",
+      "maxLat": "2.152232959588451",
+      "maxLon": "104.89069003611803"
+    },
+    "date": "2020-03-30",
+    "api": "Sentinel Hub",
+    "layer": "Geology",
+    "layerDescription": "This composite, often called the Agriculture RGB composite, uses bands SWIR-1 (B11), near-infrared (B08) and blue (B02). It’s mostly used to monitor crop health, as both short-wave and near infrared bands are particularly good at highlighting dense vegetation, which appears dark green in the composite. SWIR measurements can help scientists estimate how much water is present in plants and soil, as water reflects SWIR light. Shortwave-infrared bands are also useful for distinguishing between snow, and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage.",
+    "colors": [
+      {
+        "value": "green",
+        "description": "Dense vegetation"
+      },
+      {
+        "value": "red",
+        "description": "Fire damage"
+      },
+      {
+        "value": "blue",
+        "description": "Ocean"
+      }
+    ]
+  },
+  {
+    "imagePath": "assets/demos/auckland-43567.jpeg",
+    "title": "Auckland - New Zeland",
+    "description": "Auckland is an important city close to 2 major ports in the north of the North Island of New Zealand. In the city center, on Queen Street, the iconic Sky Tower overlooks the Port Viaduct, lined with yachts and lined with bars and cafes. Auckland Domain, the city's oldest park, is next to an extinct volcano and is home to the Wintergardens. Near downtown, Mission Bay Beach has an oceanfront boardwalk.",
+    "coordinates": {
+      "minLat": "-38.04264951538178",
+      "minLon": "172.91812866926193",
+      "maxLat": "-35.36546688777183",
+      "maxLon": "177.07233265042305"
+    },
+    "date": "2020-03-30",
+    "api": "Copernicus",
+    "layer": "SWIR",
+    "layerDescription": "Short wave infrared (SWIR) bands 11 and 12 can help scientists estimate how much water is present in plants and soil, as water reflects SWIR wavelengths. Shortwave-infrared bands are also useful for distinguishing between cloud types (water clouds versus ice clouds), snow and ice, all of which appear white in visible light. Newly burned land reflects strongly in SWIR bands, making them valuable for mapping fire damage. Each rock type reflects shortwave infrared light differently, making it possible to map out geology by comparing reflected SWIR light. In this composite, B8A is reflected by vegetation and shown in the green channel, while the reflected red band, highlighting bare soil and built up areas, is shown in the blue channel.",
+    "colors": [
+      {
+        "value": "green",
+        "description": "Vegetation"
+      },
+      {
+        "value": "brown",
+        "description": "Soil"
+      },
+      {
+        "value": "blue",
+        "description": "Water in plants and soil"
+      }
+    ]
+  },
+  {
+    "imagePath": "assets/demos/havana-22906.jpeg",
+    "title": "Havana - Cuba",
+    "description": "Havana, the capital of Cuba, displays in its historic center 16th-century Spanish colonial architecture, with examples such as the Castillo de la Real Fuerza fort and maritime museum. The National Capitol is a classic monument from the 1920s. Also situated in the old city of Havana are the baroque cathedral San Cristóbal and Plaza Vieja, whose buildings reflect the city's vibrant architectural composition.",
+    "coordinates": {
+      "minLat": "22.242414978643655",
+      "minLon": "-83.92977073788643",
+      "maxLat": "24.411615256906245",
+      "maxLon": "-80.87591584771872"
+    },
+    "date": "2020-03-30",
+    "api": "Copernicus",
+    "layer": "False Color",
+    "layerDescription": "False color imagery is displayed in a combination of standard near infra-red, red and green band. False color composite using near infrared, red and green bands is very popular. It is most commonly used to assess plant density and healht, as plants reflect near infrared and green light, while absorbing red. Since they reflect more near infrared than green, plant-covered land appears deep red. Denser plant growth is darker red. Cities and exposed ground are gray or tan, and water appears blue or black.",
+    "colors": [
+      {
+        "value": "red",
+        "description": "Vegetation"
+      },
+      {
+        "value": "grey",
+        "description": "Urbanized areas"
+      },
+      {
+        "value": "blue",
+        "description": "Ocean"
+      }
+    ]
+  },
+  {
+    "imagePath": "assets/demos/tokyo-50876.jpeg",
+    "title": "Tokyo - Japan",
+    "description": "Tokyo, Japan's bustling capital, combines ultra-modern style with traditional, from neon-lit skyscrapers to historic temples. The opulent Meiji Shinto shrine is known for its towering gate and the surrounding forests. The Imperial Palace is located amidst public gardens. The city's many museums offer exhibits ranging from classical art (at the Tokyo National Museum) to a reconstructed kabuki theater (at the Edo-Tokyo Museum).",
+    "coordinates": {
+      "minLat": "34.17179186523119",
+      "minLon": "137.9028284177184",
+      "maxLat": "36.236099603752336",
+      "maxLon": "142.12226271629333"
+    },
+    "date": "2020-03-30",
+    "api": "Copernicus",
+    "layer": "NDVI",
+    "layerDescription": "The well known and widely used NDVI is a simple, but effective index for quantifying green vegetation. It normalizes green leaf scattering in Near Infra-red wavelengths with chlorophyll absorption in red wavelengths.",
+    "colors": [
+      {
+        "value": "black",
+        "description": "NDVI < -0.2"
+      },
+      {
+        "value": "red",
+        "description": "0 < NDVI ≤ .1"
+      },
+      {
+        "value": "green",
+        "description": ".8 < NDVI ≤ .9"
+      }
+    ]
+  }
+]

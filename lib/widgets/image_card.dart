@@ -8,8 +8,11 @@ import 'package:image_satellite_visualizer/widgets/image_info.dart'
     as imageInfo;
 
 class ImageCard extends StatefulWidget {
-  const ImageCard({Key? key, required this.image, required this.callback})
-      : super(key: key);
+  const ImageCard({
+    Key? key,
+    required this.image,
+    required this.callback,
+  }) : super(key: key);
   final ImageData image;
   final callback;
 
@@ -58,10 +61,15 @@ class _ImageCardState extends State<ImageCard> {
               Expanded(
                 flex: 9,
                 child: Container(
-                  child: Image.file(
-                    File(widget.image.imagePath),
-                    fit: BoxFit.cover,
-                  ),
+                  child: widget.image.demo
+                      ? Image.asset(
+                          widget.image.imagePath,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.file(
+                          File(widget.image.imagePath),
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               Expanded(
