@@ -30,40 +30,27 @@ class Client {
       );
 
       Directory documentDirectory = await getApplicationDocumentsDirectory();
-      File file = new File(path.join(documentDirectory.path,
-          'slave_4.kml'));
-      String content = '''
-<?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
-<Document>
-  <ScreenOverlay>
-    <name>Logos</name>
-    <Icon>
-      <href>https://i.ibb.co/G5XD9MW/logos.png</href>
-    </Icon>
-    <overlayXY x="0" y="1" xunits="fraction" yunits="fraction" />
-    <screenXY x="0" y="1" xunits="fraction" yunits="fraction" />
-    <rotationXY x="0" y="0" xunits="fraction" yunits="fraction" />
-    <size x="0.5" xunits="fraction" />
-  </ScreenOverlay>
-</Document>
-</kml>
-    ''';
-      print(content);
-      file.writeAsString(content);
+        File demoImage = new File(
+            path.join(documentDirectory.path, 'image_satellite_visualizer_logos.png'));
+        var byteData = await rootBundle.load('assets/logos.png');
+        demoImage.writeAsBytesSync(byteData.buffer
+            .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
 
       await client.connect();
       await client.connectSFTP();
 
       await client.sftpUpload(
-        path: file.path,
-        toPath: "/var/www/html/kml",
+        path: demoImage.path,
+        toPath: "/home/lg",
         callback: (progress) {
           print("Sent $progress");
         },
       );
 
-      await client.execute("bash /home/lg/puta.sh");
+      await client.execute('sshpass -p lq ssh lg4 "sudo -S <<< "lq" sudo apt install pqiv -yq"');
+      await client.execute('sshpass -p lq ssh lg4 "curl https://i.imgur.com/CVDtOXm.png > /home/lg/image_satellite_visualizer_logos.png"');
+      await client.execute('sshpass -p lq ssh lg4 "pkill pqiv"');
+      await client.execute('sshpass -p lq ssh lg4 "export DISPLAY=:0 && pqiv -c -i -P 0,0 /home/lg/image_satellite_visualizer_logos.png"');
     } catch (e) {
       print("error: $e");
     }
