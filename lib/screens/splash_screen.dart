@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:image_satellite_visualizer/screens/dashboard.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SplashScreen extends StatefulWidget {
   final bool isSplash;
@@ -15,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    if(widget.isSplash) setTimer();
+    if (widget.isSplash) setTimer();
   }
 
   @override
@@ -135,15 +136,63 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             widget.isSplash
-              ? Container()
-              : SafeArea(
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                ? Container()
+                : SafeArea(
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
                   ),
-                ),
+            widget.isSplash
+                ? Container()
+                : SafeArea(
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              const url = 'https://github.com/LiquidGalaxyLAB/image-satellite-visualizer';
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              } else {
+                                throw 'Could not launch $url';
+                              }
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(screenSize.width * 0.01),
+                              child: Container(
+                                width: screenSize.width * 0.03,
+                                height: screenSize.width * 0.03,
+                                child: Image.asset('assets/github_logo.png'),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              const url = 'https://www.liquidgalaxy.eu/';
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              } else {
+                                throw 'Could not launch $url';
+                              }
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(screenSize.width * 0.01),
+                              child: Container(
+                                width: screenSize.width * 0.04,
+                                height: screenSize.width * 0.04,
+                                child: Image.asset('assets/lg_logo.png'),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),
@@ -158,6 +207,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   finishSplashScreen() {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Dashboard(title: 'Image Satellite Visualizer')));
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                Dashboard(title: 'Image Satellite Visualizer')));
   }
 }

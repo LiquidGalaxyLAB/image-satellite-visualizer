@@ -123,7 +123,7 @@ class _ImageCardState extends State<ImageCard> {
                               widget.image.api,
                               overflow: TextOverflow.fade,
                               style: TextStyle(
-                                fontWeight: FontWeight.w600, 
+                                fontWeight: FontWeight.w600,
                                 fontSize: screenSize.width * 0.009,
                               ),
                             ),
@@ -143,7 +143,7 @@ class _ImageCardState extends State<ImageCard> {
                                       widget.image.layer,
                                       overflow: TextOverflow.fade,
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w600, 
+                                        fontWeight: FontWeight.w600,
                                         fontSize: screenSize.width * 0.009,
                                       ),
                                     ),
@@ -195,8 +195,40 @@ class _ImageCardState extends State<ImageCard> {
                                             "Are you sure that you want to delete this image?"),
                                         actions: [
                                           TextButton(
-                                            onPressed: () {
+                                            onPressed: () async {
                                               widget.image.delete();
+                                              await selectedImagesBox?.delete(
+                                                  'http://lg1:81/${widget.image.getFileName()}.kml');
+
+                                              Client client = Client(
+                                                ip: settingsBox?.get('ip'),
+                                                username: settingsBox
+                                                    ?.get('username'),
+                                                password: settingsBox
+                                                    ?.get('password'),
+                                                image: widget.image,
+                                              );
+
+                                              try {
+                                                client.deleteImages(
+                                                    widget.image.getFileName(),
+                                                    selectedImagesBox!.values
+                                                        .toList()
+                                                        .join('\n'));
+                                              } catch (e) {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: Text(
+                                                          "Error deleting image"),
+                                                      content: Text(
+                                                        e.toString(),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              }
                                               Navigator.pop(context);
                                             },
                                             child: Text(

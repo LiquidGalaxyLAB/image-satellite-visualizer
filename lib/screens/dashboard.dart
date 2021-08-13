@@ -34,6 +34,8 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
 
   String searchTextController = "";
 
+  bool demoOpened = false;
+
   List<ImageData> demoImages = [];
 
   late TabController _tabController;
@@ -112,112 +114,38 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
             controller: _tabController,
             tabs: [
               Tab(text: 'My Images'),
-              Tab(text: 'Demo'),
+              Tab(text: 'Demo Images'),
             ],
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      content: SingleChildScrollView(
-                        child: Container(
-                          width: screenSize.width * 0.6,
-                          height: screenSize.height * 0.5,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: screenSize.height * 0.015,
-                                  horizontal: screenSize.height * 0.015,
-                                ),
-                                child: TextField(
-                                  keyboardType: TextInputType.number,
-                                  controller: ipSlaveTextController,
-                                  decoration: new InputDecoration(
-                                    hintText: 'IP',
-                                    labelText: 'IP',
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: screenSize.height * 0.015,
-                                  horizontal: screenSize.height * 0.015,
-                                ),
-                                child: TextField(
-                                  controller: usernameSlaveTextController,
-                                  decoration: new InputDecoration(
-                                    hintText: 'Username',
-                                    labelText: 'Username',
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: screenSize.height * 0.015,
-                                  horizontal: screenSize.height * 0.015,
-                                ),
-                                child: TextField(
-                                  obscureText: true,
-                                  controller: passwordSlaveTextController,
-                                  decoration: new InputDecoration(
-                                    hintText: 'Password',
-                                    labelText: 'Password',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      actions: [
-                        TextButton(
-                          child: Text(
-                            "CANCEL",
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                        TextButton(
-                          child: Text(
-                            "SEND",
-                            style:
-                                TextStyle(color: Theme.of(context).accentColor),
-                          ),
-                          onPressed: () async {
-                            Client client = Client(
-                              ip: ipSlaveTextController.text,
-                              username: usernameSlaveTextController.text,
-                              password: passwordSlaveTextController.text,
-                            );
-                            try {
-                              client.sendDemos();
-                              Navigator.pop(context);
-                            } catch (e) {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text("Error sending demo"),
-                                    content: Text(
-                                      e.toString(),
-                                    ),
-                                  );
-                                },
-                              );
-                            }
-                          },
-                        ),
-                      ],
-                    );
-                  },
+              onPressed: () async {
+                Client client = Client(
+                  ip: settingsBox?.get('ip'),
+                  username: settingsBox?.get('username'),
+                  password: settingsBox?.get('password'),
                 );
+                try {
+                  demoOpened ? client.closeDemos() : client.sendDemos();
+                  setState(() {
+                    demoOpened = !demoOpened;
+                  });
+                } catch (e) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text("Error sending demo"),
+                        content: Text(
+                          e.toString(),
+                        ),
+                      );
+                    },
+                  );
+                }
               },
               child: Text(
-                'DEMO',
+                demoOpened ? 'CLOSE DEMO' : 'DEMO',
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -246,6 +174,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
+                        title: Text('Liquid Galaxy Setup'),
                         content: SingleChildScrollView(
                           child: Container(
                             width: screenSize.width * 0.6,

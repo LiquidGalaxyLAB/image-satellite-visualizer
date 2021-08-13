@@ -20,6 +20,24 @@ class Client {
     this.image,
   });
 
+  void closeDemos() async {
+    try {
+      var client = new SSHClient(
+        host: this.ip,
+        port: 22,
+        username: this.username,
+        passwordOrKey: this.password,
+      );
+
+      await client.connect();
+      await client.connectSFTP();
+
+      await client.execute('sshpass -p lq ssh lg4 "pkill pqiv"');
+    } catch (e) {
+      print("error: $e");
+    }
+  }
+
   void sendDemos() async {
     try {
       var client = new SSHClient(
@@ -30,11 +48,11 @@ class Client {
       );
 
       Directory documentDirectory = await getApplicationDocumentsDirectory();
-        File demoImage = new File(
-            path.join(documentDirectory.path, 'image_satellite_visualizer_logos.png'));
-        var byteData = await rootBundle.load('assets/logos.png');
-        demoImage.writeAsBytesSync(byteData.buffer
-            .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+      File demoImage = new File(path.join(
+          documentDirectory.path, 'image_satellite_visualizer_logos.png'));
+      var byteData = await rootBundle.load('assets/logos.png');
+      demoImage.writeAsBytesSync(byteData.buffer
+          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
 
       await client.connect();
       await client.connectSFTP();
@@ -47,10 +65,13 @@ class Client {
         },
       );
 
-      await client.execute('sshpass -p lq ssh lg4 "sudo -S <<< "lq" sudo apt install pqiv -yq"');
-      await client.execute('sshpass -p lq ssh lg4 "curl https://i.imgur.com/CVDtOXm.png > /home/lg/image_satellite_visualizer_logos.png"');
+      await client.execute(
+          'sshpass -p lq ssh lg4 "sudo -S <<< "lq" sudo apt install pqiv -yq"');
+      await client.execute(
+          'sshpass -p lq ssh lg4 "curl https://i.imgur.com/CVDtOXm.png > /home/lg/image_satellite_visualizer_logos.png"');
       await client.execute('sshpass -p lq ssh lg4 "pkill pqiv"');
-      await client.execute('sshpass -p lq ssh lg4 "export DISPLAY=:0 && pqiv -c -i -P 0,0 /home/lg/image_satellite_visualizer_logos.png"');
+      await client.execute(
+          'sshpass -p lq ssh lg4 "export DISPLAY=:0 && pqiv -c -i -P 0,0 /home/lg/image_satellite_visualizer_logos.png"');
     } catch (e) {
       print("error: $e");
     }
@@ -101,6 +122,37 @@ class Client {
         },
       );
 
+      await client.execute('echo "$syncFile" > /var/www/html/kmls.txt');
+
+      if (this.image!.selected)
+        await client
+            .execute('echo "flytoview=${generateFlyTo()}" > /tmp/query.txt');
+    } catch (e) {
+      print("error: $e");
+    }
+  }
+
+  String generateFlyTo() {
+    return '<LookAt><longitude>${midpoint(this.image?.coordinates['minLon'], this.image?.coordinates['maxLon'])}</longitude><latitude>${midpoint(this.image?.coordinates['minLat'], this.image?.coordinates['maxLat'])}</latitude><range>1000000</range><tilt>0</tilt><gx:altitudeMode>relativeToGround</gx:altitudeMode></LookAt>';
+  }
+
+  String midpoint(String? a, String? b) =>
+      ((double.parse(a!) + double.parse(b!)) / 2).toString();
+
+  void deleteImages(String file, String syncFile) async {
+    try {
+      var client = new SSHClient(
+        host: this.ip,
+        port: 22,
+        username: this.username,
+        passwordOrKey: this.password,
+      );
+
+      await client.connect();
+      await client.connectSFTP();
+
+      await client.sftpRm("/var/www/html/$file.jpeg");
+      await client.sftpRm("/var/www/html/$file.kml");
       await client.execute('echo "$syncFile" > /var/www/html/kmls.txt');
     } catch (e) {
       print("error: $e");
