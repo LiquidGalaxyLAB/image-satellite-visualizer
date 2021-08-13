@@ -12,7 +12,10 @@ void main() async {
   await Hive.openBox('liquidGalaxySettings');
   await Hive.openBox('selectedImages');
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight]);
+  SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+  ]);
 
   runApp(MyApp());
 }
