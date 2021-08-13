@@ -3,16 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:image_satellite_visualizer/screens/dashboard.dart';
 
-// List of images
-final List<String> images = [
-  'assets/gsoc.png',
-  'assets/lg_logo.png',
-  'assets/image_satellite_visualizer_logo.png',
-  'assets/lg_lab_logo.png',
-  'assets/lg_eu_logo.png',
-  'assets/pcital.png'
-];
-
 class SplashScreen extends StatefulWidget {
   final bool isSplash;
   const SplashScreen(this.isSplash, {Key? key}) : super(key: key);
@@ -56,46 +46,43 @@ class _SplashScreenState extends State<SplashScreen> {
                   Expanded(
                     flex: 3,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: screenSize.width * 0.05),
-                          child: Container(
-                            child: Center(
-                              child: Image.asset(
-                                'assets/lg_logo.png',
-                                fit: BoxFit.contain,
-                              ),
+                        Container(
+                          child: Center(
+                            child: Image.asset(
+                              'assets/pera_logo.png',
+                              fit: BoxFit.contain,
                             ),
-                            width: screenSize.width / 7,
                           ),
+                          width: screenSize.width / 8,
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: screenSize.width * 0.05),
-                          child: Container(
-                            child: Center(
-                              child: Image.asset(
-                                'assets/gsoc.png',
-                                fit: BoxFit.contain,
-                              ),
+                        Container(
+                          child: Center(
+                            child: Image.asset(
+                              'assets/lg_logo.png',
+                              fit: BoxFit.contain,
                             ),
-                            width: screenSize.width / 5,
                           ),
+                          width: screenSize.width / 7,
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: screenSize.width * 0.05),
-                          child: Container(
-                            child: Center(
-                              child: Image.asset(
-                                'assets/facens.png',
-                                fit: BoxFit.contain,
-                              ),
+                        Container(
+                          child: Center(
+                            child: Image.asset(
+                              'assets/gsoc.png',
+                              fit: BoxFit.contain,
                             ),
-                            width: screenSize.width / 7,
                           ),
+                          width: screenSize.width / 6,
+                        ),
+                        Container(
+                          child: Center(
+                            child: Image.asset(
+                              'assets/facens.png',
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          width: screenSize.width / 6,
                         ),
                       ],
                     ),
@@ -131,6 +118,15 @@ class _SplashScreenState extends State<SplashScreen> {
                             ),
                           ),
                           width: screenSize.width / 6,
+                        ),
+                        Container(
+                          child: Center(
+                            child: Image.asset(
+                              'assets/tic_logo.png',
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          width: screenSize.width / 7,
                         ),
                       ],
                     ),

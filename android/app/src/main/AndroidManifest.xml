@@ -12,7 +12,7 @@
        </intent>
    </queries>
    <application
-        android:label="image_satellite_visualizer"
+        android:label="Image Satellite Visualizer"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

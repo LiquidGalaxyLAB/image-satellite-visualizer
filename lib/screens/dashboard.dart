@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
+import 'package:image_satellite_visualizer/models/client.dart';
 import 'package:image_satellite_visualizer/screens/image_form/image_form.dart';
 import 'package:image_satellite_visualizer/screens/splash_screen.dart';
 import 'package:image_satellite_visualizer/widgets/image_card.dart';
@@ -18,16 +19,25 @@ class Dashboard extends StatefulWidget {
   _DashboardState createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   Box? imageBox;
   Box? settingsBox;
+  Box? selectedImagesBox;
 
   TextEditingController ipTextController = TextEditingController();
   TextEditingController usernameTextController = TextEditingController();
   TextEditingController passwordTextController = TextEditingController();
+
+  TextEditingController ipSlaveTextController = TextEditingController();
+  TextEditingController usernameSlaveTextController = TextEditingController();
+  TextEditingController passwordSlaveTextController = TextEditingController();
+
   String searchTextController = "";
 
   List<ImageData> demoImages = [];
+
+  late TabController _tabController;
+  late int _tabIndex = 0;
 
   List<Widget> imageCards(List images) {
     List<Widget> list = [];
@@ -78,6 +88,13 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     imageBox = Hive.box('imageBox');
     settingsBox = Hive.box('liquidGalaxySettings');
+    selectedImagesBox = Hive.box('selectedImages');
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {
+        _tabIndex = _tabController.index;
+      });
+    });
     loadJsonData();
   }
 
@@ -90,23 +107,119 @@ class _DashboardState extends State<Dashboard> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text('Image Satellite Visualizer'),
+          title: Text('Liquid Galaxy - Image Satellite Visualizer'),
           bottom: TabBar(
+            controller: _tabController,
             tabs: [
               Tab(text: 'My Images'),
               Tab(text: 'Demo'),
             ],
           ),
           actions: [
-            Padding(
-              padding: EdgeInsets.only(left: screenSize.width * 0.01),
-              child: TextButton(
-                onPressed: () => loadJsonData(),
-                child: Text(
-                  'DEMO',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+            TextButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: SingleChildScrollView(
+                        child: Container(
+                          width: screenSize.width * 0.6,
+                          height: screenSize.height * 0.5,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: screenSize.height * 0.015,
+                                  horizontal: screenSize.height * 0.015,
+                                ),
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  controller: ipSlaveTextController,
+                                  decoration: new InputDecoration(
+                                    hintText: 'IP',
+                                    labelText: 'IP',
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: screenSize.height * 0.015,
+                                  horizontal: screenSize.height * 0.015,
+                                ),
+                                child: TextField(
+                                  controller: usernameSlaveTextController,
+                                  decoration: new InputDecoration(
+                                    hintText: 'Username',
+                                    labelText: 'Username',
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: screenSize.height * 0.015,
+                                  horizontal: screenSize.height * 0.015,
+                                ),
+                                child: TextField(
+                                  obscureText: true,
+                                  controller: passwordSlaveTextController,
+                                  decoration: new InputDecoration(
+                                    hintText: 'Password',
+                                    labelText: 'Password',
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          child: Text(
+                            "CANCEL",
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        TextButton(
+                          child: Text(
+                            "SEND",
+                            style:
+                                TextStyle(color: Theme.of(context).accentColor),
+                          ),
+                          onPressed: () async {
+                            Client client = Client(
+                              ip: ipSlaveTextController.text,
+                              username: usernameSlaveTextController.text,
+                              password: passwordSlaveTextController.text,
+                            );
+                            try {
+                              client.sendDemos();
+                              Navigator.pop(context);
+                            } catch (e) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text("Error sending demo"),
+                                    content: Text(
+                                      e.toString(),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Text(
+                'DEMO',
+                style: TextStyle(
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -218,6 +331,7 @@ class _DashboardState extends State<Dashboard> {
           ],
         ),
         body: TabBarView(
+          controller: _tabController,
           children: [
             Column(
               children: [
@@ -267,7 +381,7 @@ class _DashboardState extends State<Dashboard> {
             GridView.count(
               children: imageCards(demoImages),
               childAspectRatio: 0.8,
-              crossAxisSpacing: screenSize.width * 0.03,
+              crossAxisSpacing: screenSize.width * 0.01,
               crossAxisCount: 3,
               // padding: EdgeInsetsDirectional.all(screenSize.width * 0.07),
               padding: EdgeInsetsDirectional.fromSTEB(
@@ -278,14 +392,16 @@ class _DashboardState extends State<Dashboard> {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ImageForm()),
-          ),
-          tooltip: 'New image',
-          child: Icon(Icons.add),
-        ),
+        floatingActionButton: _tabIndex == 0
+            ? FloatingActionButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ImageForm()),
+                ),
+                tooltip: 'New image',
+                child: Icon(Icons.add),
+              )
+            : Container(),
       ),
     );
   }

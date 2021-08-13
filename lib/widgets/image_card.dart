@@ -32,7 +32,6 @@ class _ImageCardState extends State<ImageCard> {
     super.initState();
     settingsBox = Hive.box('liquidGalaxySettings');
     selectedImagesBox = Hive.box('selectedImages');
-    print('image title: ' + widget.image.title);
     titleEditingController.text = widget.image.title;
     descriptionEditingController.text = widget.image.description;
   }
@@ -42,8 +41,6 @@ class _ImageCardState extends State<ImageCard> {
     Size screenSize = MediaQuery.of(context).size;
 
     return Container(
-      width: screenSize.width * 0.22,
-      height: screenSize.height * 0.5,
       child: Card(
         elevation: 3,
         child: InkWell(
@@ -54,51 +51,50 @@ class _ImageCardState extends State<ImageCard> {
                   return imageInfo.ImageInfo(widget.image);
                 });
           },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 9,
-                child: Container(
-                  child: widget.image.demo
-                      ? Image.asset(
-                          widget.image.imagePath,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.file(
-                          File(widget.image.imagePath),
-                          fit: BoxFit.cover,
-                        ),
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Container(
-                  padding: EdgeInsets.only(
-                    left: screenSize.width * 0.01,
-                    right: screenSize.width * 0.01,
-                    top: screenSize.width * 0.01,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: Text(
-                          widget.image.title,
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: screenSize.width * 0.015,
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 10,
+                  child: Container(
+                    child: widget.image.demo
+                        ? Image.asset(
+                            widget.image.imagePath,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.file(
+                            File(widget.image.imagePath),
+                            fit: BoxFit.cover,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    padding: EdgeInsets.only(
+                      left: screenSize.width * 0.01,
+                      right: screenSize.width * 0.01,
+                      top: screenSize.width * 0.01,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: screenSize.width * 0.15,
+                          child: Text(
+                            widget.image.title,
+                            style: TextStyle(
+                              color: Theme.of(context).accentColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: screenSize.width * 0.015,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
                         ),
-                      ),
-                      Spacer(),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
+                        Text(
                           '${widget.image.date.year}/${widget.image.date.month}/${widget.image.date.day}',
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
@@ -107,222 +103,267 @@ class _ImageCardState extends State<ImageCard> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: screenSize.width * 0.01),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding:
-                            EdgeInsets.only(right: screenSize.width * 0.01),
-                        child: Chip(
-                          label: Text(widget.image.api),
-                        ),
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsets.only(right: screenSize.width * 0.01),
-                        child: Chip(
-                          label: Text(
-                            widget.image.layer,
-                            overflow: TextOverflow.fade,
+                Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screenSize.width * 0.01),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding:
+                              EdgeInsets.only(right: screenSize.width * 0.01),
+                          child: Chip(
+                            label: Text(
+                              widget.image.api,
+                              overflow: TextOverflow.fade,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600, 
+                                fontSize: screenSize.width * 0.009,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 4,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    left: screenSize.width * 0.01,
-                    right: screenSize.width * 0.01,
-                    top: screenSize.width * 0.008,
-                  ),
-                  child: Text(
-                    widget.image.description,
-                    style: TextStyle(fontWeight: FontWeight.w300),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 4,
-                  ),
-                ),
-              ),
-              Spacer(),
-              Expanded(
-                flex: 2,
-                child: Container(
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text("Delete"),
-                                content: Text(
-                                    "Are you sure that you want to delete this image?"),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      widget.image.delete();
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      "Delete",
-                                      style: TextStyle(color: Colors.red),
+                        Expanded(
+                          child: Padding(
+                            padding:
+                                EdgeInsets.only(right: screenSize.width * 0.01),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Flexible(
+                                  child: Chip(
+                                    label: Text(
+                                      widget.image.layer,
+                                      overflow: TextOverflow.fade,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600, 
+                                        fontSize: screenSize.width * 0.009,
+                                      ),
                                     ),
                                   ),
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: Text(
-                                      "Cancel",
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: Icon(Icons.delete),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: screenSize.width * 0.01,
+                      right: screenSize.width * 0.01,
+                      top: screenSize.width * 0.008,
+                    ),
+                    child: Text(
+                      widget.image.description,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                        fontSize: screenSize.width * 0.0125,
                       ),
-                      IconButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  content: SingleChildScrollView(
-                                    child: Container(
-                                      width: screenSize.width * 0.6,
-                                      height: screenSize.height * 0.5,
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              vertical:
-                                                  screenSize.height * 0.015,
-                                              horizontal:
-                                                  screenSize.height * 0.015,
-                                            ),
-                                            child: TextField(
-                                              controller:
-                                                  titleEditingController,
-                                              decoration: new InputDecoration(
-                                                hintText: 'Title',
-                                                labelText: 'Title',
-                                              ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
+                    ),
+                  ),
+                ),
+                Spacer(),
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    child: Row(
+                      children: [
+                        widget.image.demo
+                            ? Container()
+                            : IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text("Delete"),
+                                        content: Text(
+                                            "Are you sure that you want to delete this image?"),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              widget.image.delete();
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text(
+                                              "Delete",
+                                              style:
+                                                  TextStyle(color: Colors.red),
                                             ),
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              vertical:
-                                                  screenSize.height * 0.015,
-                                              horizontal:
-                                                  screenSize.height * 0.015,
-                                            ),
-                                            child: TextField(
-                                              maxLines: 8,
-                                              controller:
-                                                  descriptionEditingController,
-                                              decoration: new InputDecoration(
-                                                hintText: 'Description',
-                                                labelText: 'Description',
-                                              ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Text(
+                                              "Cancel",
+                                              style:
+                                                  TextStyle(color: Colors.grey),
                                             ),
                                           ),
                                         ],
-                                      ),
-                                    ),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      child: Text(
-                                        "CANCEL",
-                                        style:
-                                            TextStyle(color: Colors.grey[600]),
-                                      ),
-                                      onPressed: () => Navigator.pop(context),
-                                    ),
-                                    TextButton(
-                                      child: Text(
-                                        "SET",
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).accentColor),
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          widget.image.title =
-                                              titleEditingController.text;
-                                          widget.image.description =
-                                              descriptionEditingController.text;
-                                        });
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                        icon: Icon(Icons.edit),
-                      ),
-                      Spacer(),
-                      IconButton(
-                        onPressed: () async {
-                          widget.callback(widget.image);
-                          widget.image.selected
-                              ? await selectedImagesBox?.put(
-                                  'http://lg1:81/${widget.image.getFileName()}.kml',
-                                  'http://lg1:81/${widget.image.getFileName()}.kml')
-                              : await selectedImagesBox?.delete(
-                                  'http://lg1:81/${widget.image.getFileName()}.kml');
+                                      );
+                                    },
+                                  );
+                                },
+                                icon: Icon(Icons.delete),
+                              ),
+                        widget.image.demo
+                            ? Container()
+                            : IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          content: SingleChildScrollView(
+                                            child: Container(
+                                              width: screenSize.width * 0.6,
+                                              height: screenSize.height * 0.5,
+                                              child: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      vertical:
+                                                          screenSize.height *
+                                                              0.015,
+                                                      horizontal:
+                                                          screenSize.height *
+                                                              0.015,
+                                                    ),
+                                                    child: TextField(
+                                                      controller:
+                                                          titleEditingController,
+                                                      decoration:
+                                                          new InputDecoration(
+                                                        hintText: 'Title',
+                                                        labelText: 'Title',
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      vertical:
+                                                          screenSize.height *
+                                                              0.015,
+                                                      horizontal:
+                                                          screenSize.height *
+                                                              0.015,
+                                                    ),
+                                                    child: TextField(
+                                                      maxLines: 8,
+                                                      controller:
+                                                          descriptionEditingController,
+                                                      decoration:
+                                                          new InputDecoration(
+                                                        hintText: 'Description',
+                                                        labelText:
+                                                            'Description',
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              child: Text(
+                                                "CANCEL",
+                                                style: TextStyle(
+                                                    color: Colors.grey[600]),
+                                              ),
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                            ),
+                                            TextButton(
+                                              child: Text(
+                                                "SET",
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .accentColor),
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  widget.image.title =
+                                                      titleEditingController
+                                                          .text;
+                                                  widget.image.description =
+                                                      descriptionEditingController
+                                                          .text;
+                                                });
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                },
+                                icon: Icon(Icons.edit),
+                              ),
+                        Spacer(),
+                        IconButton(
+                          onPressed: () async {
+                            widget.callback(widget.image);
+                            widget.image.selected
+                                ? await selectedImagesBox?.put(
+                                    'http://lg1:81/${widget.image.getFileName()}.kml',
+                                    'http://lg1:81/${widget.image.getFileName()}.kml')
+                                : await selectedImagesBox?.delete(
+                                    'http://lg1:81/${widget.image.getFileName()}.kml');
 
-                          Client client = Client(
-                            ip: settingsBox?.get('ip'),
-                            username: settingsBox?.get('username'),
-                            password: settingsBox?.get('password'),
-                            image: widget.image,
-                          );
-                          try {
-                            client.sendImage(
-                                selectedImagesBox!.values.toList().join('\n'));
-                          } catch (e) {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text("Error sending image"),
-                                  content: Text(
-                                    e.toString(),
-                                  ),
-                                );
-                              },
+                            Client client = Client(
+                              ip: settingsBox?.get('ip'),
+                              username: settingsBox?.get('username'),
+                              password: settingsBox?.get('password'),
+                              image: widget.image,
                             );
-                          }
-                        },
-                        icon: Icon(
-                          widget.image.selected
-                              ? Icons.remove_circle
-                              : Icons.send,
-                          color: Theme.of(context).accentColor,
+                            try {
+                              client.sendImage(selectedImagesBox!.values
+                                  .toList()
+                                  .join('\n'));
+                            } catch (e) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text("Error sending image"),
+                                    content: Text(
+                                      e.toString(),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                          },
+                          icon: Icon(
+                            widget.image.selected
+                                ? Icons.remove_circle
+                                : Icons.send,
+                            color: Theme.of(context).accentColor,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
