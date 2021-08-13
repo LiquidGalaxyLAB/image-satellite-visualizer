@@ -118,39 +118,6 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
             ],
           ),
           actions: [
-            TextButton(
-              onPressed: () async {
-                Client client = Client(
-                  ip: settingsBox?.get('ip'),
-                  username: settingsBox?.get('username'),
-                  password: settingsBox?.get('password'),
-                );
-                try {
-                  demoOpened ? client.closeDemos() : client.sendDemos();
-                  setState(() {
-                    demoOpened = !demoOpened;
-                  });
-                } catch (e) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text("Error sending demo"),
-                        content: Text(
-                          e.toString(),
-                        ),
-                      );
-                    },
-                  );
-                }
-              },
-              child: Text(
-                demoOpened ? 'CLOSE DEMO' : 'DEMO',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
             Padding(
               padding: EdgeInsets.only(left: screenSize.width * 0.01),
               child: TextButton(
@@ -246,6 +213,29 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                   'username', usernameTextController.text);
                               settingsBox?.put(
                                   'password', passwordTextController.text);
+
+                              Client client = Client(
+                                ip: settingsBox?.get('ip'),
+                                username: settingsBox?.get('username'),
+                                password: settingsBox?.get('password'),
+                              );
+                              
+                              try {
+                                client.sendDemos();
+                              } catch (e) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text("Error sending logos"),
+                                      content: Text(
+                                        e.toString(),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+
                               Navigator.pop(context);
                             },
                           ),

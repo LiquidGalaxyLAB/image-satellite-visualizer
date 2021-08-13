@@ -13,8 +13,8 @@ void main() async {
   await Hive.openBox('selectedImages');
 
   SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+    DeviceOrientation.landscapeLeft,
   ]);
 
   runApp(MyApp());
