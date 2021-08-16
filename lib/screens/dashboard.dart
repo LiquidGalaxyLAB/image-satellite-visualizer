@@ -10,6 +10,7 @@ import 'package:image_satellite_visualizer/screens/image_form/image_form.dart';
 import 'package:image_satellite_visualizer/screens/splash_screen.dart';
 import 'package:image_satellite_visualizer/widgets/image_card.dart';
 import 'package:image_satellite_visualizer/models/image_data.dart';
+import 'package:ssh/ssh.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key, required this.title}) : super(key: key);
@@ -85,6 +86,39 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     });
   }
 
+  void cleanKmls() {
+    Client client = Client(
+      ip: settingsBox?.get('ip'),
+      username: settingsBox?.get('username'),
+      password: settingsBox?.get('password'),
+    );
+
+    try {
+      setState(() {
+        demoImages.forEach((element) {
+          element.selected = false;
+        });
+        imageBox!.values.toList().forEach((element) {
+          element.selected = false;
+        });
+      });
+      selectedImagesBox?.deleteAll(selectedImagesBox!.values);
+      client.cleanKML();
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Error cleaning KMLS, check connection"),
+            content: Text(
+              e.toString(),
+            ),
+          );
+        },
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -97,6 +131,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
         _tabIndex = _tabController.index;
       });
     });
+    settingsBox?.put('connection', false);
     loadJsonData();
   }
 
@@ -134,9 +169,21 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               ),
             ),
             Padding(
+              padding: EdgeInsets.only(left: screenSize.width * 0.01),
+              child: TextButton(
+                child: Text(
+                  'CLEAN KMLS',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () => cleanKmls(),
+              ),
+            ),
+            Padding(
               padding: EdgeInsets.only(right: screenSize.width * 0.01),
               child: TextButton(
-                onPressed: () {
+                onPressed: () async {
                   showDialog(
                     context: context,
                     builder: (context) {
@@ -148,6 +195,30 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                             height: screenSize.height * 0.5,
                             child: Column(
                               children: [
+                                ValueListenableBuilder(
+                                  valueListenable:
+                                      Hive.box('liquidGalaxySettings')
+                                          .listenable(),
+                                  builder: (context, box, widget) {
+                                    return Row(
+                                      children: [
+                                        Spacer(),
+                                        Text('CONNECTION: '),
+                                        settingsBox?.get('connection')
+                                            ? Icon(
+                                                Icons.check_circle,
+                                                color: Colors.green,
+                                                size: 20,
+                                              )
+                                            : Icon(
+                                                Icons.cancel,
+                                                color: Colors.red,
+                                                size: 20,
+                                              ),
+                                      ],
+                                    );
+                                  },
+                                ),
                                 Padding(
                                   padding: EdgeInsets.symmetric(
                                     vertical: screenSize.height * 0.015,
@@ -207,7 +278,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                               style: TextStyle(
                                   color: Theme.of(context).accentColor),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               settingsBox?.put('ip', ipTextController.text);
                               settingsBox?.put(
                                   'username', usernameTextController.text);
@@ -219,24 +290,26 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                                 username: settingsBox?.get('username'),
                                 password: settingsBox?.get('password'),
                               );
-                              
+
                               try {
+                                await client.checkConnection();
+                                settingsBox?.put('connection', true);
                                 client.sendDemos();
                               } catch (e) {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      title: Text("Error sending logos"),
+                                      title: Text(
+                                          "Error on liquid galaxy connection"),
                                       content: Text(
-                                        e.toString(),
+                                        'Check connection settings',
                                       ),
                                     );
                                   },
                                 );
+                                settingsBox?.put('connection', false);
                               }
-
-                              Navigator.pop(context);
                             },
                           ),
                         ],

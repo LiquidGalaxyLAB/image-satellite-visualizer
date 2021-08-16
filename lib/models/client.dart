@@ -132,6 +132,33 @@ class Client {
     }
   }
 
+  void cleanKML() async {
+    try {
+      var client = new SSHClient(
+        host: this.ip,
+        port: 22,
+        username: this.username,
+        passwordOrKey: this.password,
+      );
+
+      await client.connect();
+      await client.execute("> /var/www/html/kmls.txt");
+    } catch (e) {
+      print("error: $e");
+    }
+  }
+
+  Future<void> checkConnection() async {
+    var client = new SSHClient(
+      host: this.ip,
+      port: 22,
+      username: this.username,
+      passwordOrKey: this.password,
+    );
+
+    await client.connect();
+  }
+
   String generateFlyTo() {
     return '<LookAt><longitude>${midpoint(this.image?.coordinates['minLon'], this.image?.coordinates['maxLon'])}</longitude><latitude>${midpoint(this.image?.coordinates['minLat'], this.image?.coordinates['maxLat'])}</latitude><range>1000000</range><tilt>0</tilt><gx:altitudeMode>relativeToGround</gx:altitudeMode></LookAt>';
   }
