@@ -1,3 +1,5 @@
+[![License](https://img.shields.io/github/license/LiquidGalaxyLAB/image-satellite-visualizer.svg)](https://opensource.org/licenses/Apache-2.0) [![github-languages-image](https://img.shields.io/github/languages/top/LiquidGalaxyLAB/image-satellite-visualizer.svg?color=red)]() [![github-language-count-image](https://img.shields.io/github/languages/count/LiquidGalaxyLAB/image-satellite-visualizer.svg)]() [![Issues](https://img.shields.io/github/issues/LiquidGalaxyLAB/image-satellite-visualizer.svg)](https://github.com/LiquidGalaxyLAB/image-satellite-visualizer/issues) [![forks](https://img.shields.io/github/forks/LiquidGalaxyLAB/image-satellite-visualizer.svg)]() [![github-repo-size-image](https://img.shields.io/github/repo-size/LiquidGalaxyLAB/image-satellite-visualizer.svg?color=yellow)]()
+
 ## Image Satellite Visualizer
 
 

@@ -38,7 +38,7 @@ class Client {
     }
   }
 
-  void sendDemos() async {
+  void sendLogo() async {
     try {
       var client = new SSHClient(
         host: this.ip,
@@ -47,31 +47,31 @@ class Client {
         passwordOrKey: this.password,
       );
 
-      Directory documentDirectory = await getApplicationDocumentsDirectory();
-      File demoImage = new File(path.join(
-          documentDirectory.path, 'image_satellite_visualizer_logos.png'));
-      var byteData = await rootBundle.load('assets/logos.png');
-      demoImage.writeAsBytesSync(byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-
+      String openLogoKML = '''
+<?xml version="1.0" encoding="UTF-8"?>
+  <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+    <Document>
+      <name>Ras-logos</name>
+        <Folder>
+        <name>Logos</name>
+        <ScreenOverlay>
+        <name>Logo</name>
+        <Icon>
+        <href>https://i.imgur.com/CVDtOXm.png</href>
+        </Icon>
+        <overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>
+        <screenXY x="0.02" y="0.95" xunits="fraction" yunits="fraction"/>
+        <rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>
+        <size x="0.4" y="0.2" xunits="fraction" yunits="fraction"/>
+        </ScreenOverlay>
+        </Folder>
+    </Document>
+  </kml>
+    ''';
+    
       await client.connect();
-      await client.connectSFTP();
 
-      await client.sftpUpload(
-        path: demoImage.path,
-        toPath: "/home/lg",
-        callback: (progress) {
-          print("Sent $progress");
-        },
-      );
-
-      await client.execute(
-          'sshpass -p lq ssh lg4 "sudo -S <<< "lq" sudo apt install pqiv -yq"');
-      await client.execute(
-          'sshpass -p lq ssh lg4 "curl https://i.imgur.com/CVDtOXm.png > /home/lg/image_satellite_visualizer_logos.png"');
-      await client.execute('sshpass -p lq ssh lg4 "pkill pqiv"');
-      await client.execute(
-          'sshpass -p lq ssh lg4 "export DISPLAY=:0 && pqiv -c -i -P 0,0 /home/lg/image_satellite_visualizer_logos.png"');
+      await client.execute("echo '$openLogoKML' > /var/www/html/kml/slave_4.kml");
     } catch (e) {
       print("error: $e");
     }

@@ -294,7 +294,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                               try {
                                 await client.checkConnection();
                                 settingsBox?.put('connection', true);
-                                client.sendDemos();
+                                client.sendLogo();
                               } catch (e) {
                                 showDialog(
                                   context: context,
