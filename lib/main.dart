@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Liquid Galaxy - Image Satellite Visualizer',
       theme: ThemeData(
         primaryColor: Colors.blueGrey[700],
